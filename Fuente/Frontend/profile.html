@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="Styles/profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Datos del Usuario</h2>
+        <div class="profile-img">
+            <img id="user-img" src="https://via.placeholder.com/120" alt="Imagen de usuario">
+        </div>
+        <div class="profile-data">
+            <label>Nombre:</label>
+            <span id="user-nombre"></span><br>
+            <label>Apellido:</label>
+            <span id="user-apellido"></span><br>
+            <label>Número:</label>
+            <span id="user-numero"></span><br>
+            <label>Email:</label>
+            <span id="user-mail"></span><br>
+            <label>Contraseña:</label>
+            <input type="password" id="user-pass" value="********" disabled>
+        </div>
+        <button id="change-pass-btn">Cambiar Contraseña</button>
+        <button id="back-btn" class="secondary-btn">Volver</button>
+    </div>
+    <script src="Scripts/profile.js"></script>
+</body>
+</html>

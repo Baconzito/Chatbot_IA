@@ -1,8 +1,8 @@
 CREATE PROCEDURE [dbo].[sp_Get_User]
-@Email nvarchar(50)
+@Id int
 
 AS
 BEGIN
-	select * from Users where Email=@Email
+	select * from Users where Id=@Id
 END
 GO

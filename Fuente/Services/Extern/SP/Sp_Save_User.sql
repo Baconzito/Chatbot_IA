@@ -1,7 +1,7 @@
 CREATE PROCEDURE [dbo].[sp_Save_User]
 @Id int=0,
 @Email nvarchar(50),
-@Password nvarchar(50)
+@Password nvarchar(66)
 
 AS
 BEGIN

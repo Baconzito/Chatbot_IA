@@ -5,11 +5,11 @@ import Sp
 class Mpp_User:
     def __init__(self):
         pass
-    def get_user(Email):
+    def get_user(Id):
         try:
             conn = cx.get_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Users WHERE Email = {Email}")
+            cursor.execute(Sp.StoredProcedures_User["Get_User"],Id)
             usr = User(cursor["Id"], cursor["Email"], cursor["Password"])
             return usr
         except Exception as e:
@@ -23,7 +23,7 @@ class Mpp_User:
         try:
             conn = cx.get_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO Users (Email, Password) VALUES ({usr.Email}, {usr.Password})")
+            cursor.execute(Sp.StoredProcedures_User["New_User"],(usr.Email, usr.Password))
             conn.commit()
             return True
         except Exception as e:

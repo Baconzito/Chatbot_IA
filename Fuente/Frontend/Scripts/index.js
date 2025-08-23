@@ -90,4 +90,14 @@ elements.promptInput.addEventListener('keydown', (e) => {
         handleMensajeEnvio();
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const profileMock = document.getElementById('profile-mock');
+    if (profileMock) {
+        profileMock.style.cursor = "pointer";
+        profileMock.addEventListener('click', () => {
+            window.location.href = "profile.html";
+        });
+    }
+});
 //#endregion

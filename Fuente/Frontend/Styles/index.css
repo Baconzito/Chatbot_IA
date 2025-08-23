@@ -1,10 +1,24 @@
+:root {
+    --color-bg: #f4f6fb;
+    --color-card: #e0e6ed;
+    --color-detail: #64748b;
+    --color-text: #222;
+    --color-blue: #2563eb;
+    --color-blue-hover: #1e40af;
+    --color-btn-text: #fff;
+    --color-danger: #e74c3c;
+    --color-danger-hover: #c0392b;
+}
+
 body {
     font-family: Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden; /* Evita scroll horizontal cuando el menú está abierto */
+    overflow: hidden;
     position: relative;
 }
 
@@ -12,18 +26,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(83, 10, 74);
-    color: white;
+    background: var(--color-blue-hover);
+    color: var(--color-btn-text);
     padding: 10px;
     z-index: 99;
     position: sticky;
     top: 0;
-    transition: margin-left 0.3s ease; /* Add transition for smooth movement */
+    transition: margin-left 0.3s;
 }
 
 #menu-button {
-    background-color: white;
-    color: black;
+    background: var(--color-btn-text);
+    color: var(--color-text);
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -35,10 +49,10 @@ body {
     flex-direction: column;
     height: 100%;
     width: 100%;
-    transition: margin-left 0.3s ease;
+    transition: margin-left 0.3s;
     position: relative;
     min-height: 100vh;
-    background-color: white;
+    background: var(--color-card);
 }
 
 #main-content.menu-open {
@@ -51,13 +65,13 @@ body {
     left: -300px;
     height: 100vh;
     width: 300px;
-    background-color: white;
-    border-right: 1px solid #ccc;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+    background: var(--color-card);
+    border-right: 1px solid var(--color-detail);
+    box-shadow: 2px 0 10px rgba(100, 116, 139, 0.08);
     z-index: 100;
     display: flex;
     flex-direction: column;
-    transition: left 0.3s ease;
+    transition: left 0.3s;
     overflow-y: auto;
 }
 
@@ -67,7 +81,7 @@ body {
 
 #profile-mock {
     margin-bottom: 10px;
-    flex-shrink: 0; /* Evita que el perfil se encoja */
+    flex-shrink: 0;
 }
 
 .menu-content {
@@ -87,7 +101,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: lightblue;
+    background: #bdbdbd;
     background-size: cover;
     background-position: center;
 }
@@ -96,9 +110,9 @@ body {
     flex-grow: 1;
     padding: 10px;
     overflow-y: auto;
-    border-left: 5px solid rgb(122, 38, 38);
-    border-top: 5px solid rgb(122, 38, 38);
-    background-color: #f9f9f9;
+    border-left: 5px solid var(--color-detail);
+    border-top: 5px solid var(--color-detail);
+    background: #f9f9f9;
     margin: 10px;
 }
 
@@ -108,48 +122,41 @@ body {
     margin: 10px 0;
 }
 
-/* Contenedor del header del mensaje */
 .message-header {
     display: flex;
-    flex-direction: column; /* Cambiado a columna para que imagen y nombre estén uno debajo del otro */
+    flex-direction: column;
     align-items: center;
     margin-right: 15px;
 }
 
-/* Contenedor de la imagen y el nombre */
 .avatar-container {
     display: flex;
-    flex-direction: column; /* Cambiado a columna para que la imagen esté arriba y el nombre abajo */
-    align-items: center; /* Centrado del contenido */
+    flex-direction: column;
+    align-items: center;
     margin-right: 15px;
 }
 
-/* Foto de usuario */
 .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: lightblue;
+    background: #bdbdbd;
     background-size: cover;
     background-position: center;
 }
 
-/* Nombre debajo de la foto */
 .message-name {
     margin-top: 5px;
     font-weight: bold;
     text-align: center;
 }
 
-
-/* Contenedor del contenido del mensaje */
 .message-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-/* Contenedor del texto del mensaje */
 .message-text {
     padding: 10px;
     border-radius: 10px;
@@ -159,43 +166,46 @@ body {
 
 #input-container {
     display: flex;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--color-detail);
     padding: 10px;
     margin: 10px;
-    border-left: 5px solid rgb(122, 38, 38);
-    background-color: #f9f9f9;
+    border-left: 5px solid var(--color-detail);
+    background: #f9f9f9;
 }
 
 #prompt {
     flex-grow: 1;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-detail);
     border-radius: 4px;
+    background: #fff;
+    color: var(--color-text);
 }
 
 #send-button {
     margin-left: 10px;
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
-    color: white;
+    background: var(--color-blue);
+    color: var(--color-btn-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 #send-button:hover {
-    background-color: #0056b3;
+    background: var(--color-blue-hover);
 }
 
 #logout-btn {
     position: sticky;
     bottom: 0;
-    margin: 20px auto 40px auto; /* Increased bottom margin from 20px to 40px */
+    margin: 20px auto 40px auto;
     width: 90%;
-    background: #e74c3c;
-    color: white;
+    background: var(--color-danger);
+    color: var(--color-btn-text);
     border: none;
     border-radius: 4px;
     padding: 12px;
@@ -206,5 +216,5 @@ body {
 }
 
 #logout-btn:hover {
-    background: #c0392b;
+    background: var(--color-danger-hover);
 }
