@@ -1,12 +1,17 @@
 from flask import Blueprint, request, jsonify
-import Backend.BLL.User as users_BLL
+from Backend.BLL.User import User as BLLUser
 
 users_bp = Blueprint('users_API', __name__, url_prefix='/users')
+
+user_BLL = BLLUser.Bll_User()
 
 #ABM de usuarios
 @users_bp.route("/register", methods=["POST"])
 def register():
-    return jsonify({'message': "Registro exitoso"}), 200
+    if(user_BLL.new_user(request.json)):
+        return jsonify({'message': "Registro exitoso"}), 200
+    else:
+        return jsonify({'message': "Error en el registro"}), 400
 
 @users_bp.route("/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):

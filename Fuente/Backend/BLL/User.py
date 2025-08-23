@@ -1,10 +1,10 @@
-import MPP.User 
-import BE.Classes.User as User
+from Backend.MPP import User 
+from BE.Classes.User import User as UserBE
 import re
 
 class Bll_User:
     def __init__(self):
-        self.users_MPP = MPP.User()
+        self.users_MPP = User.Mpp_User()
         # Initialize any required attributes or services
         pass
 
@@ -12,7 +12,7 @@ class Bll_User:
         # Logic to create a user
         email = user_data.get('email')
         password = user_data.get('password')
-        oUsuario = User.User(email, password)
+        oUsuario = UserBE(email, password)
         if not self.validar_Campos(oUsuario):
             return False
         return self.users_MPP.new_user(oUsuario)

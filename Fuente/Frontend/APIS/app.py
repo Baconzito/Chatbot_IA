@@ -1,3 +1,8 @@
+import sys
+import os
+# Agrega la carpeta 'Fuente' al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -6,7 +11,8 @@ from users_API import users_bp as Users_API
 
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
 # Blueprints de APIs
 app.register_blueprint(Users_API)

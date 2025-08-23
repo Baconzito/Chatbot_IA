@@ -1,6 +1,6 @@
-import Services.Extern.Conection as cx
-import BE.Classes.User as User
-import Sp
+from Services.Extern import Conection as cx
+from BE.Classes import User
+from Backend.MPP import Sp
 
 class Mpp_User:
     def __init__(self):
