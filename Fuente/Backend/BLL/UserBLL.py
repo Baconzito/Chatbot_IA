@@ -1,10 +1,10 @@
-from Backend.MPP import User 
+from Backend.MPP import UserMPP 
 from BE.Classes.User import User as UserBE
 import re
 
 class Bll_User:
     def __init__(self):
-        self.users_MPP = User.Mpp_User()
+        self.users_MPP = UserMPP.Mpp_User()
         # Initialize any required attributes or services
         pass
 
