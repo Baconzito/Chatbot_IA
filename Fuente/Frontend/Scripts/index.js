@@ -59,11 +59,11 @@ function handleMensajeEnvio() {
 }
 
 // Eventos del menú lateral
-elements.menuButton.addEventListener('click', function (e) {
-    e.stopPropagation();
-    elements.menuDropdown.classList.toggle('show');
-    elements.mainContent.classList.toggle('menu-open');
-});
+// elements.menuButton.addEventListener('click', function (e) {
+//     e.stopPropagation();
+//     elements.menuDropdown.classList.toggle('show');
+//     elements.mainContent.classList.toggle('menu-open');
+// });
 
 document.addEventListener('click', function (event) {
     if (
@@ -92,12 +92,28 @@ elements.promptInput.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const profileMock = document.getElementById('profile-mock');
+    const profileMock = document.querySelector('.div-profile');
     if (profileMock) {
         profileMock.style.cursor = "pointer";
         profileMock.addEventListener('click', () => {
             window.location.href = "profile.html";
         });
+    }
+});
+
+const call_menu = document.querySelectorAll(".call-menu");
+const dropDown = document.querySelector(".menuDropDown");
+
+call_menu.forEach(element => {
+    element.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropDown.classList.toggle("dropDownAction");
+    });
+});
+
+document.addEventListener("click", (e) => {
+    if (!dropDown.contains(e.target) && !e.target.classList.contains("call-menu")) {
+        dropDown.classList.remove("dropDownAction");
     }
 });
 //#endregion
