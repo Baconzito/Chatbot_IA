@@ -33,6 +33,7 @@ body {
     position: sticky;
     top: 0;
     transition: margin-left 0.3s;
+    z-index: 1;
 }
 
 #menu-button {
@@ -53,6 +54,7 @@ body {
     position: relative;
     min-height: 100vh;
     background: var(--color-card);
+    z-index: 1;
 }
 
 #main-content.menu-open {
@@ -81,8 +83,110 @@ body {
 
 #profile-mock {
     margin-bottom: 10px;
-    flex-shrink: 0;
+    /* flex-shrink: 0; */
+    color: #fff;
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    padding: 20px;
+    position: relative;
+    background-color: #1e40af;
+    height: 90%;
+    width: 18%;
+    z-index: 2;
 }
+
+#div-profile{
+    color: #000;
+}
+
+#profile-mock-div-img{
+    min-width: 50px; 
+    min-height: 50px; 
+    border-radius: 50%; 
+    background-color: #bdbdbd; 
+    background-image: url('https://randomuser.me/api/portraits/men/1.jpg'); 
+    background-size: cover;
+    
+    z-index: 2;
+}
+
+
+i{
+    color: #fff;
+    font-size: 12px;
+}
+
+.menuDropDown{
+    margin-left: 17%;
+    width: 80%;
+    height: 0;
+    border-radius: 8px;
+    /* background: #174cfb; */
+    background-color: #f6f6f6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    top: 65%;
+    transition: height 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.menuDropDown.dropDownAction{
+    height: 100%;
+    max-height: 100px;
+    min-width: 200px;
+    color: #000;
+}
+
+.fa-gear{
+    font-size: 16px;
+    color: #000;
+}
+
+.div-configuration{
+    font-size: 16px;
+    font-family: roboto;
+    color: #000;
+}
+
+.fa-right-from-bracket{
+    color: red;
+    font-size: 16px;
+}
+
+.div-close_session{
+    font-size: 16px;
+    font-family: roboto;
+}
+
+.dropDownSection{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+}
+
+.dropDownSection:hover {
+    background-color: #e0e6ed;
+}
+
+.dropDownSection i{
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 1%;
+    
+}
+
+.dropDownSection div{
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 5%;
+}
+
 
 .menu-content {
     flex: 1;

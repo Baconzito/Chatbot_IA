@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ai-chan</title>
     <link rel="stylesheet" href="Styles/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+
+
 </head>
 <body>
     <div id="menu-dropdown">
-        <div id="profile-mock" style="display: flex; align-items: center; gap: 15px; padding: 20px;">
+        <!-- <div id="profile-mock" style="display: flex; align-items: center; gap: 15px; padding: 20px;">
             <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #bdbdbd; background-image: url('https://randomuser.me/api/portraits/men/1.jpg'); background-size: cover;"></div>
             <div>
                 <div style="font-weight: bold; color: #333;">mockuser@email.com</div>
             </div>
-        </div>
+        </div> -->
         <hr style="margin: 0 20px;">
         <div class="menu-content">
             <!-- Aquí puede ir contenido adicional del menú -->
@@ -25,7 +28,24 @@
 
     <div id="main-content">
         <div id="top-bar">
-            <button id="menu-button">☰</button>
+             <div id="profile-mock">
+                <div id="profile-mock-div-img" ></div>
+            <div>
+            <div class="call-menu">mockuser@email.com</div>
+            </div>
+            <i class="fa-solid fa-chevron-down call-menu"></i>
+            <div class="menuDropDown">
+                <div class="dropDownSection div-profile"> 
+                    <i class="fa-solid fa-gear"></i> 
+                    <div class="div-configuration div-profile">Configuración</div>
+                </div>
+                <div class="dropDownSection">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <div id="logout-btn" class="div-close_session">Cerrar Sesión</div>
+                </div>
+            </div>
+        </div>
+        
         </div>
         <div id="chat-container">
             <!-- Aquí se mostrarán los mensajes -->
