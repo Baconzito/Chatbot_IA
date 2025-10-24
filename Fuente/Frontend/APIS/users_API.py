@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from Backend.BLL.User import User as BLLUser
+from Backend.BLL.UserBLL import UserMPP as BLLUser
 
 users_bp = Blueprint('users_API', __name__, url_prefix='/users')
 

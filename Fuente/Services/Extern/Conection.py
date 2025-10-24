@@ -1,19 +1,32 @@
-import os
-from dotenv import load_dotenv
-import pyodbc
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
-# Obtener la ruta absoluta del archivo .env
-dotenv_path = os.path.join(os.path.dirname(__file__), 'configs.env')
-load_dotenv(dotenv_path=dotenv_path)
-
-try:
-    connection_string = os.getenv('CONNECTION_STRING')
-    print(f"CONNECTION_STRING: {connection_string}")  # Para depuración
-    connection = pyodbc.connect(connection_string)
-    print("Conexión exitosa a la base de datos")
-except Exception as e:
-    print(f"Error al conectar a la base de datos: {e}")
-finally:
-    if 'connection' in locals():
-        connection.close()
-        print("Conexión cerrada")
+class MongoDBConnection:
+    def __init__(self, connection_string):
+        """Initialize MongoDB connection with connection string."""
+        self.connection_string = connection_string
+        self.client = None
+        
+    def connect(self):
+        """Establish connection to MongoDB cluster."""
+        try:
+            self.client = MongoClient(self.connection_string)
+            # Ping the server to verify connection
+            self.client.admin.command('ping')
+            print("Successfully connected to MongoDB!")
+            return True
+        except ConnectionFailure as e:
+            print(f"Failed to connect to MongoDB: {e}")
+            return False
+            
+    def get_database(self, db_name):
+        """Get database instance."""
+        if self.client:
+            return self.client[db_name]
+        return None
+        
+    def close(self):
+        """Close MongoDB connection."""
+        if self.client:
+            self.client.close()
+            print("MongoDB connection closed.")
