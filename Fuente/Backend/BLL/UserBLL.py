@@ -1,5 +1,6 @@
 from Backend.MPP import UserMPP 
 from BE.Classes.User import User as UserBE
+from Services.Intern.Password_Encripter import HashPassword as HP
 import re
 
 class Bll_User:
@@ -12,17 +13,21 @@ class Bll_User:
         # Logic to create a user
         email = user_data.get('email')
         password = user_data.get('password')
-        oUsuario = UserBE(email, password)
+        oUsuario = UserBE(email, HP(password))
         if not self.validar_Campos(oUsuario):
             return False
         return self.users_MPP.new_user(oUsuario)
 
     def get_user(self, user_id):
         # Logic to get a user by ID
+        
         pass
 
     def update_user(self, user_id, user_data):
         # Logic to update a user
+        email = user_data.get('email')
+        password = user_data.get('password')
+        
         pass
 
     def delete_user(self, user_id):
