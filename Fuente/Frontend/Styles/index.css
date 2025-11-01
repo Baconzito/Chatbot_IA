@@ -22,7 +22,7 @@ body {
     position: relative;
 }
 
-#top-bar {
+.top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -81,7 +81,7 @@ body {
     left: 0;
 }
 
-#profile-mock {
+.profile-mock {
     margin-bottom: 10px;
     /* flex-shrink: 0; */
     color: #fff;
@@ -100,7 +100,7 @@ body {
     color: #000;
 }
 
-#profile-mock-div-img{
+.profile-mock-div-img{
     min-width: 50px; 
     min-height: 50px; 
     border-radius: 50%; 
@@ -303,7 +303,7 @@ i{
     background: var(--color-blue-hover);
 }
 
-#logout-btn {
+/* #logout-btn {
     position: sticky;
     bottom: 0;
     margin: 20px auto 40px auto;
@@ -317,8 +317,8 @@ i{
     cursor: pointer;
     transition: background 0.2s;
     flex-shrink: 0;
-}
+} */
 
-#logout-btn:hover {
+/* #logout-btn:hover {
     background: var(--color-danger-hover);
-}
+} */
