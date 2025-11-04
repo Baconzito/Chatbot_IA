@@ -27,15 +27,26 @@ def update_user(user_id):
 def update_user_password(user_id):
     return jsonify({'message': "Contraseña actualizada"}), 200
 
-#Login y Logout
-@users_bp.route("/login", methods=["POST"])
-def login():
-    return jsonify({'message': "Login exitoso"}), 200
 
 @users_bp.route("/logout", methods=["POST"])
 def logout():
     return jsonify({'message': "Logout exitoso"}), 200
     
+#Login vía parámetros en la ruta: /users/login/<email>/<password>
+@users_bp.route("/login", methods=["POST"])
+def login(request.json):
+    """
+    Login vía parámetros en la ruta: /users/login/<email>/<password>
+    Nota: pasar credenciales en la URL es inseguro; usar POST body en producción.
+    """
+    try:
+        if (user_BLL.validar_Campos(email, password)):
+            return jsonify({'message':"login exitoso"}), 200
+        else:
+            return jsonify({'message': "Credenciales inválidas"}), 401
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 #Obtener usuario
 @users_bp.route("/<int:user_id>", methods=["GET"])
 def get_user(user_id):
