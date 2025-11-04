@@ -63,6 +63,20 @@ class Mpp_User:
         finally:
             self.connection.close()
 
+    def login(self, usr):
+        """Autentica a un usuario por email y contraseña."""
+        try:
+            docs = self.connection.find_documents(
+                self.db_name,
+                self.collection,
+                query={"Email": usr.Email, "Password": usr.Password},
+                limit=1
+            )
+            return docs is not None and len(docs) > 0
+        except Exception as e:
+            print(f"Error during login: {e}")
+            return False
+        
     def delete_user(self, usr):
         """Elimina un usuario de la base de datos."""
         try:

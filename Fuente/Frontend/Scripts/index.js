@@ -54,7 +54,8 @@ function handleMensajeEnvio() {
 
     // Mock response
     setTimeout(() => {
-        agregarMensaje('UaiFy', 'Esta es una respuesta de prueba', 'ai-chan');
+        let a = getMenuById();
+        agregarMensaje('UaiFy', a["Mensaje"], 'UaiFy');
     }, 500);
 }
 

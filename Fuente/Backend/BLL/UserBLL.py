@@ -38,6 +38,12 @@ class UserBLL:
         # Logic to list all users
         pass
 
+    def login(self, user_data):
+        email = user_data.get('email')
+        password = user_data.get('password')
+        oUsuario = UserBE(email, HP(password))
+        return self.users_MPP.login(oUsuario)
+        
     # Add any other methods that exist in Mpp_User
     
     def validar_Campos(self, user):
