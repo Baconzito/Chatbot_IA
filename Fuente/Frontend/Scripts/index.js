@@ -116,4 +116,57 @@ document.addEventListener("click", (e) => {
         dropDown.classList.remove("dropDownAction");
     }
 });
+
+// Add this after the API_BASE_URL import
+async function getMenuById(menuId = "1") {
+    try {
+        const response = await fetch(`${API_BASE_URL}/chat/get_menu/${menuId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const menu = await response.json();
+        
+        // Detailed console logging
+        console.group('Menu Data Retrieved:');
+        console.log('Complete menu object:', menu);
+        console.log('Menu structure:', JSON.stringify(menu, null, 2));
+        if (menu.items) {
+            console.log('Menu items:', menu.items);
+        }
+        console.groupEnd();
+        
+        return menu;
+    } catch (error) {
+        console.error('Error fetching menu:', error);
+        return null;
+    }
+}
+
+// Test in DOMContentLoaded
+document.addEventListener('DOMContentLoaded', async () => {
+    // ...existing DOMContentLoaded code...
+
+    console.log('Fetching menu data...');
+    try {
+        const menu = await getMenuById();
+        if (menu) {
+            console.log('------- Menu Data -------');
+            console.log('Raw menu data:', menu);
+            console.table(menu); // Shows data in table format if possible
+            console.log('------------------------');
+        } else {
+            console.warn('No menu data received');
+        }
+    } catch (error) {
+        console.error('Error loading menu:', error);
+    }
+});
+
 //#endregion

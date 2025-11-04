@@ -1,33 +1,31 @@
 from dataclasses import dataclass, asdict
-from Services.extern import connection as MongoDBConnection
-import sqlite3
-import json
+from Services.Extern.Conection import MongoDBConnection
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-import os
-
-# chatMPP.py
-# Módulo de acceso a datos para "Chat" (similar a UserMPP.py)
-# Implementación simple basada en sqlite3 + JSON para mensajes.
-# Diseñado para usarse como proveedor de persistencia (MPP = Mapper / Persistence Provider).
-
-
-
-@dataclass
-class Chat:
-    id: Optional[int]
-    user_id: int
-    title: Optional[str]
-    messages: List[Dict[str, Any]]  # lista de mensajes como diccionarios
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-
 
 class ChatMPP:
-    def __init__(self, db_path: str):
+    def __init__(self):
+        # Initialize MongoDB connection
+        self.db_conection = MongoDBConnection("mongodb+srv://farellijavier_db_user:farellijavier_db_user@cluster0.b5uiirf.mongodb.net/")
+        # No need for _ensure_db() since we're using MongoDB
+
+    def get_menu_by_id(self, menu_id: str) -> Optional[Dict[str, Any]]:
         """
-        db_path: ruta al fichero sqlite (ej: "./data.db")
+        Retrieves a menu by its ID using the MongoDB connection.
+        
+        Args:
+            menu_id (str): The ID of the menu to retrieve
+            
+        Returns:
+            Optional[Dict[str, Any]]: The menu document if found, None otherwise
         """
-        self.db_conection = MongoDBConnection(db_path)
-        self._ensure_db()
+        try:
+            menu = self.db_conection.get_menu_by_id(
+                menu_id=menu_id,
+                close_after=True
+            )
+            return menu
+        except Exception as e:
+            print(f"Error retrieving menu from database: {e}")
+            return None
 

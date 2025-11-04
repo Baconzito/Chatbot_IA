@@ -3,7 +3,7 @@ from BE.Classes.User import User as UserBE
 from Services.Intern.Password_Encripter import HashPassword as HP
 import re
 
-class Bll_User:
+class UserBLL:
     def __init__(self):
         self.users_MPP = UserMPP.Mpp_User()
         # Initialize any required attributes or services

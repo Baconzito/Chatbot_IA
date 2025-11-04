@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
-from Backend.BLL.UserBLL import UserMPP as BLLUser
+from Backend.BLL.UserBLL import UserBLL  # Fixed import
 
 users_bp = Blueprint('users_API', __name__, url_prefix='/users')
 
-user_BLL = BLLUser.Bll_User()
+user_BLL = UserBLL()  # Create instance of UserBLL directly
 
 #ABM de usuarios
 @users_bp.route("/register", methods=["POST"])

@@ -1,10 +1,21 @@
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, PyMongoError
+import os
+from typing import Optional
+from dotenv import load_dotenv
+load_dotenv()
 
 class MongoDBConnection:
-    def __init__(self, connection_string):
-        """Initialize MongoDB connection with connection string."""
-        self.connection_string = connection_string
+    def __init__(self, connection_string: Optional[str] = None):
+        """
+        Initialize MongoDB connection with connection string from environment variable.
+        Falls back to provided connection_string if env var is not set.
+        """
+        self.connection_string = (
+            connection_string or 
+            os.getenv('MONGODB_URI') or 
+            'mongodb://localhost:27017'
+        )
         self.client = None
         
     def connect(self):
@@ -76,6 +87,39 @@ class MongoDBConnection:
         except PyMongoError as e:
             print(f"Error finding documents: {e}")
             return []
+        finally:
+            if close_after:
+                self.close()
+
+    def get_menu_by_id(self, menu_id: str, db_name: str = "chatbot_ia", collection_name: str = "Menus", close_after: bool = False) -> dict:
+        """
+        Retrieve a specific menu document by its ID.
+        
+        Args:
+            menu_id (str): The ID of the menu to find
+            db_name (str): Database name, defaults to AppDB
+            collection_name (str): Collection name, defaults to Menus
+            close_after (bool): Whether to close the connection after operation
+            
+        Returns:
+            dict: The menu document if found, None otherwise
+        """
+        try:
+            docs = self.find_documents(
+                db_name=db_name,
+                collection_name=collection_name,
+                query={"_id": menu_id},
+                limit=1,
+                close_after=False
+            )
+            
+            if docs and len(docs) > 0:
+                return docs[0]
+            return None
+            
+        except PyMongoError as e:
+            print(f"Error retrieving menu: {e}")
+            return None
         finally:
             if close_after:
                 self.close()
