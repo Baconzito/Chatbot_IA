@@ -54,7 +54,7 @@ function handleMensajeEnvio() {
 
     // Mock response
     setTimeout(() => {
-        agregarMensaje('Ai-chan', 'Esta es una respuesta de prueba', 'ai-chan');
+        agregarMensaje('UaiFy', 'Esta es una respuesta de prueba', 'ai-chan');
     }, 500);
 }
 
