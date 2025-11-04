@@ -10,7 +10,7 @@ const elements = {
     promptInput: document.getElementById('prompt'),
     sendButton: document.getElementById('send-button'),
     menuButton: document.getElementById('menu-button'),
-    menuDropdown: document.getElementById('menu-dropdown'),
+    // menuDropdown: document.getElementById('menu-dropdown'),
     mainContent: document.getElementById('main-content'),
     logoutBtn: document.getElementById('logout-btn'),
 };
@@ -54,7 +54,7 @@ function handleMensajeEnvio() {
 
     // Mock response
     setTimeout(() => {
-        agregarMensaje('Ai-chan', 'Esta es una respuesta de prueba', 'ai-chan');
+        agregarMensaje('UaiFy', 'Esta es una respuesta de prueba', 'ai-chan');
     }, 500);
 }
 
