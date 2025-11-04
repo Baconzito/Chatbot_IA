@@ -4,8 +4,8 @@ from BE.Classes.User import User
 class Mpp_User:
     def __init__(self):
         """Inicializa el mapper para usuarios usando MongoDB."""
-        self.connection = MongoDBConnection("mongodb://localhost:27017")
-        self.db_name = "AppDB"
+        self.connection = MongoDBConnection()
+        self.db_name = "chatbot_ia"
         self.collection = "Users"
 
     def get_user(self, Id):
