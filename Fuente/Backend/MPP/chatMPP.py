@@ -6,7 +6,7 @@ from datetime import datetime
 class ChatMPP:
     def __init__(self):
         # Initialize MongoDB connection
-        self.db_conection = MongoDBConnection("mongodb+srv://farellijavier_db_user:farellijavier_db_user@cluster0.b5uiirf.mongodb.net/")
+        self.db_conection = MongoDBConnection()
         # No need for _ensure_db() since we're using MongoDB
 
     def get_menu_by_id(self, menu_id: str) -> Optional[Dict[str, Any]]:
