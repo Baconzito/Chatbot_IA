@@ -34,13 +34,13 @@ def logout():
     
 #Login vía parámetros en la ruta: /users/login/<email>/<password>
 @users_bp.route("/login", methods=["POST"])
-def login(request.json):
+def login():
     """
     Login vía parámetros en la ruta: /users/login/<email>/<password>
     Nota: pasar credenciales en la URL es inseguro; usar POST body en producción.
     """
     try:
-        if (user_BLL.validar_Campos(email, password)):
+        if (user_BLL.login(request.json)):
             return jsonify({'message':"login exitoso"}), 200
         else:
             return jsonify({'message': "Credenciales inválidas"}), 401
