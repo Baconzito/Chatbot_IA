@@ -3,7 +3,10 @@ from pymongo.errors import ConnectionFailure, PyMongoError
 import os
 from typing import Optional
 from dotenv import load_dotenv
-load_dotenv()
+from pathlib import Path
+
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=env_path)
 
 class MongoDBConnection:
     def __init__(self, connection_string: Optional[str] = None):
@@ -11,11 +14,7 @@ class MongoDBConnection:
         Initialize MongoDB connection with connection string from environment variable.
         Falls back to provided connection_string if env var is not set.
         """
-        self.connection_string = (
-            connection_string or 
-            os.getenv('MONGODB_URI') or 
-            'mongodb://localhost:27017'
-        )
+        self.connection_string = os.getenv('MONGODB_URI')
         self.client = None
         
     def connect(self):
