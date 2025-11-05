@@ -1,3 +1,13 @@
+const imagenUsuario = document.getElementById("user-img");
+
+const detectarImagen = ()=>{
+    if(imagenUsuario.src == ""){
+        imagenUsuario.src = "../../Imagenes/GenericUserProfile.png";
+    }
+};
+
+detectarImagen();
+
 // Simulación de datos de usuario (reemplaza esto con tu lógica real)
 const usuario = {
     nombre: "Juan",
