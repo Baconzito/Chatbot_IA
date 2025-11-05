@@ -40,7 +40,7 @@ def login():
     Nota: pasar credenciales en la URL es inseguro; usar POST body en producción.
     """
     try:
-        if (user_BLL.validar_Campos(request.json)):
+        if (user_BLL.login(request.json)):
             return jsonify({'message':"login exitoso"}), 200
         else:
             return jsonify({'message': "Credenciales inválidas"}), 401
