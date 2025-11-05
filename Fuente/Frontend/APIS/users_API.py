@@ -32,11 +32,11 @@ def update_user_password(user_id):
 def logout():
     return jsonify({'message': "Logout exitoso"}), 200
     
-#Login vía parámetros en la ruta: /users/login/<email>/<password>
+#Login vía parámetros en la ruta: /users/login
 @users_bp.route("/login", methods=["POST"])
 def login():
     """
-    Login vía parámetros en la ruta: /users/login/<email>/<password>
+    Login vía parámetros en la ruta: /users/login
     Nota: pasar credenciales en la URL es inseguro; usar POST body en producción.
     """
     try:
