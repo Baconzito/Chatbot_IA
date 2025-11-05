@@ -56,7 +56,7 @@ input[type="password"] {
     outline: none;
 }
 
-#change-pass-btn {
+.change-pass-btn {
     background: var(--color-blue);
     color: var(--color-btn-text);
     border: none;
@@ -67,7 +67,7 @@ input[type="password"] {
     transition: background 0.2s;
 }
 
-#change-pass-btn:hover {
+.change-pass-btn:hover {
     background: var(--color-blue-hover);
 }
 
