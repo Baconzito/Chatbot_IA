@@ -14,11 +14,15 @@ body {
     font-family: Arial, sans-serif;
     background: var(--color-bg);
     color: var(--color-text);
+    background: linear-gradient(135deg, #92b6ff, #dcdcdc);
+    height: 93vh;
 }
 
 .profile-container {
     background: var(--color-card);
     max-width: 400px;
+    height: 500px;
+    max-height: 500px;
     margin: 40px auto;
     padding: 30px 40px;
     border-radius: 10px;
@@ -81,4 +85,8 @@ input[type="password"] {
 
 .secondary-btn:hover {
     background: var(--color-secondary-hover);
+}
+
+.input-IMG{
+    border: #2563eb 1px;
 }

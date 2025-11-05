@@ -1,8 +1,8 @@
 const imagenUsuario = document.getElementById("user-img");
 
 const detectarImagen = ()=>{
-    if(imagenUsuario.src == ""){
-        imagenUsuario.src = "../../Imagenes/GenericUserProfile.png";
+    if (!imagenUsuario.getAttribute("src")) {
+        imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
     }
 };
 
@@ -19,18 +19,18 @@ const usuario = {
 };
 
 window.onload = function() {
-    document.getElementById('user-nombre').textContent = usuario.nombre;
-    document.getElementById('user-apellido').textContent = usuario.apellido;
-    document.getElementById('user-numero').textContent = usuario.numero;
+    document.querySelector('.user-nombre').textContent = usuario.nombre;
+    document.querySelector('.user-apellido').textContent = usuario.apellido;
+    document.querySelector('.user-numero').textContent = usuario.numero;
     document.getElementById('user-img').src = usuario.imagen;
-    document.getElementById('user-mail').textContent = usuario.mail;
+    document.querySelector('.user-mail').textContent = usuario.mail;
     document.getElementById('user-pass').value = usuario.password;
 
-    document.getElementById('change-pass-btn').onclick = function() {
+    document.querySelector('.change-pass-btn').onclick = function() {
         window.location.href = "cambiar_contraseña.html"; // O muestra un modal
     };
 
-    document.getElementById('back-btn').onclick = function() {
+    document.querySelector('.back-btn').onclick = function() {
         window.location.href = "index.html";
     };
 };
