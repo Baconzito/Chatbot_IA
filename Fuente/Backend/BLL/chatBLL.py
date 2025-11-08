@@ -28,7 +28,14 @@ class ChatBLL:
             print(f"ChatBLL.create_chat error: {e}")
             return None
 
-    def create_chat(self, chat_data):
-        # chat_data es un diccionario con la información del usuario (id)
-        # Lógica para crear un nuevo chat
-        pass
+    def close_chat(self, chat_id: str) -> bool:
+        """
+        Cierra el chat identificado por chat_id delegando en ChatMPP.
+        Retorna True si se cerró correctamente, False en caso de error o no encontrado.
+        """
+        try:
+            return self.chat_MPP.close_chat(chat_id)
+        except Exception as e:
+            print(f"ChatBLL.close_chat error: {e}")
+            return False
+
