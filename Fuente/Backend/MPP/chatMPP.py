@@ -5,7 +5,7 @@ from datetime import datetime
 
 class ChatMPP:
     def __init__(self):
-        # Initialize MongoDB connection
+        # Initialize MongoDB connection (uses env var if configured)
         self.db_conection = MongoDBConnection()
         # No need for _ensure_db() since we're using MongoDB
 
@@ -27,5 +27,34 @@ class ChatMPP:
             return menu
         except Exception as e:
             print(f"Error retrieving menu from database: {e}")
+            return None
+
+    def create_chat(self, id_usuario: str, iniciado: Optional[str] = None) -> Optional[str]:
+        """
+        Crea un documento Chat en la colección 'Chats'.
+        Args:
+            id_usuario: id del usuario que inicia el chat
+            iniciado: fecha/hora de inicio en ISO format (si no se pasa, se genera ahora)
+        Returns:
+            inserted_id (str) del chat creado o None en caso de error
+        """
+        try:
+            iniciado = iniciado or datetime.utcnow().isoformat()
+            doc = {
+                "id_usuario": id_usuario,
+                "iniciado": iniciado,
+                "estado": True
+            }
+            inserted_id = self.db_conection.insert_document(
+                db_name="chatbot_ia",
+                collection_name="Chats",
+                document=doc,
+                close_after=True
+            )
+            if inserted_id:
+                return str(inserted_id)
+            return None
+        except Exception as e:
+            print(f"Error creating chat: {e}")
             return None
 
