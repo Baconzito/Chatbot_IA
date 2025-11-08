@@ -6,7 +6,9 @@ const detectarImagen = ()=>{
     }
 };
 
-detectarImagen();
+document.addEventListener("DOMContentLoaded", () => {
+    detectarImagen();
+});
 
 // Simulación de datos de usuario (reemplaza esto con tu lógica real)
 const usuario = {
