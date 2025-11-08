@@ -18,25 +18,17 @@ class UserBLL:
             return False
         return self.users_MPP.new_user(oUsuario)
 
-    def get_user(self, user_id):
+    def get_user(self, user_id): #Traer usuario para mostrar perfil
         # Logic to get a user by ID
         
         pass
 
-    def update_user(self, user_id, user_data):
+    def update_user_password(self, user_data):
         # Logic to update a user
         email = user_data.get('email')
         password = user_data.get('password')
-        
-        pass
-
-    def delete_user(self, user_id):
-        # Logic to delete a user
-        pass
-
-    def list_users(self):
-        # Logic to list all users
-        pass
+        oUsuario = UserBE(email, HP(password))
+        return self.users_MPP.update_user_password(oUsuario)
 
     def login(self, user_data):
         email = user_data.get('email')
@@ -44,7 +36,6 @@ class UserBLL:
         oUsuario = UserBE(email, HP(password))
         return self.users_MPP.login(oUsuario)
         
-    # Add any other methods that exist in Mpp_User
     
     def validar_Campos(self, user):
         if(user.Email == "" or user.Password == ""):
