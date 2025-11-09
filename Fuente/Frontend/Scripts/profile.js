@@ -15,7 +15,6 @@ const usuario = {
     nombre: "Juan",
     apellido: "Pérez",
     numero: "123456789",
-    imagen: "https://via.placeholder.com/120",
     mail: "juan.perez@email.com",
     password: "********"
 };
@@ -28,6 +27,14 @@ window.onload = function() {
     document.querySelector('.user-mail').textContent = usuario.mail;
     document.getElementById('user-pass').value = usuario.password;
 
+    const imagenUsuario = document.getElementById('user-img');
+    if (usuario.imagen && usuario.imagen.startsWith('http')) {
+        imagenUsuario.src = usuario.imagen;
+    } else {
+        imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
+    }
+
+    
     document.querySelector('.change-pass-btn').onclick = function() {
         window.location.href = "cambiar_contraseña.html"; // O muestra un modal
     };
@@ -36,3 +43,18 @@ window.onload = function() {
         window.location.href = "index.html";
     };
 };
+
+
+const input_IMG = document.querySelector(".input-IMG");
+const input_foto = document.querySelector(".input-foto");
+
+input_IMG.addEventListener("click",()=>{
+    input_foto.click();
+});
+
+input_foto.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(file){
+        imagenUsuario.src = URL.createObjectURL(file);
+    }
+});
