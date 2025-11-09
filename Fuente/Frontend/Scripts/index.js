@@ -9,8 +9,6 @@ const elements = {
     chatContainer: document.getElementById('chat-container'),
     promptInput: document.getElementById('prompt'),
     sendButton: document.getElementById('send-button'),
-    // menuButton: document.getElementById('menu-button'),
-    // menuDropdown: document.getElementById('menu-dropdown'),
     mainContent: document.getElementById('main-content'),
     logoutBtn: document.getElementById('logout-btn'),
 };
