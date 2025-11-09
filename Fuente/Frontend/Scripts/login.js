@@ -1,43 +1,49 @@
-import { Sesion } from './Clases/Sesion.js';
-import { Usuario } from './Clases/Usuario.js';
-import { validateEmail, showAlert } from './utils.js';
+import { validateEmail, showAlert, API_BASE_URL } from './utils.js';
 
-const sesion = new Sesion();
-
-// Referencias al DOM
+// DOM Elements
+const loginForm = document.getElementById('login-form');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-const loginForm = document.getElementById('login-form');
-const errorMessage = document.getElementById('error-message');
 const registerBtn = document.getElementById('register-btn');
 
-// Función para mostrar mensajes de error
-function mostrarError(mensaje) {
-    if (errorMessage) {
-        errorMessage.textContent = mensaje;
-        errorMessage.style.display = 'block';
+async function handleLogin(email, password) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/login`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Store token/session data if received
+            if (data.token) {
+                document.cookie = `auth_token=${data.token}; path=/`;
+            }
+            window.location.href = 'index.html';
+        } else {
+            showAlert(data.message || 'Error en el inicio de sesión');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Error al conectar con el servidor');
     }
 }
 
-// Función para limpiar mensajes de error
-function limpiarError() {
-    if (errorMessage) {
-        errorMessage.textContent = '';
-        errorMessage.style.display = 'none';
-    }
-}
-
-// Evento de envío del formulario
+// Form submission
 if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        limpiarError();
 
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
+        // Validation
         if (!email || !password) {
-            mostrarError('Por favor, completa todos los campos.');
+            showAlert('Por favor, completa todos los campos.');
             return;
         }
 
@@ -46,23 +52,13 @@ if (loginForm) {
             return;
         }
 
-        const usuario = new Usuario(email, password);
-        const loginExitoso = sesion.iniciarSesion(usuario);
-        
-        
-        if (loginExitoso != 1) {
-            document.cookie = 
-            window.location.href = 'index.html';
-
-        } else {
-            showAlert('Correo o contraseña incorrectos');
-        }
+        await handleLogin(email, password);
     });
 }
 
-// Evento para ir a la página de registro
+// Register button
 if (registerBtn) {
-    registerBtn.addEventListener('click', function () {
+    registerBtn.addEventListener('click', () => {
         window.location.href = 'register.html';
     });
 }
