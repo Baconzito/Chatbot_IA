@@ -46,27 +46,38 @@ if (loginForm) {
             return;
         }
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/users/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ `email=${email}`, `password=${password}` }),
-            });
+        window.location.href = './index.html';
 
-            const data = await response.json();
+        // try {
+        //     const response = await fetch(`${API_BASE_URL}/users/login`, {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({
+        //             email: email,      
+        //             password: password
+        //         }),
+        //     });
 
-            if (!response.ok) {
-                showAlert(data.message || 'Credenciales inválidas');
-                return;
-            }
+            
+        //     const data = await response.json();
+        //     console.log('Respuesta del servidor:', data);
 
-            document.cookie = `token=${data.token}; path=/; max-age=3600;`;
-            window.location.href = 'index.html';
+        //     if (!response.ok) {
+        //         showAlert(data.message || 'Credenciales inválidas');
+        //         return;
+        //     }
 
-        } catch (err) {
-            console.error('Error en login:', err);
-            showAlert('Error al conectar con el servidor.');
-        }
+        //     if (data.success) {
+        //         document.cookie = `token=${data.token}; path=/; max-age=3600;`;
+        //         window.location.href = '../index.html';
+        //     } else {
+        //         showAlert(data.mensaje || 'Error al iniciar sesión');
+        //     }
+
+        // } catch (err) {
+        //     console.error('Error al conectar con el servidor:', err);
+        //     showAlert('Error al conectar con el servidor.');
+        // }
     });
 }
 
