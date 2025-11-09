@@ -20,7 +20,7 @@ class Mpp_User:
             )
             if docs and len(docs) > 0:
                 doc = docs[0]
-                return User(doc["Id"], doc["Email"], doc["Password"])
+                return User(doc["_id"], doc["email"], doc["password"])
             return None
         except Exception as e:
             print(f"Error getting user: {e}")
@@ -30,8 +30,8 @@ class Mpp_User:
         """Crea un nuevo usuario en la base de datos."""
         try:
             user_doc = {
-                "Email": usr.Email,
-                "Password": usr.Password,
+                "email": usr.Email,
+                "password": usr.Password,
                 "ultima_modificacinon": datetime.datetime.utcnow()
             }
             result = self.connection.insert_document(
@@ -70,7 +70,7 @@ class Mpp_User:
             docs = self.connection.find_documents(
                 self.db_name,
                 self.collection,
-                query={"Email": usr.Email, "Password": usr.Password},
+                query={"email": usr.Email, "password": usr.Password},
                 limit=1
             )
             return docs is not None and len(docs) > 0
