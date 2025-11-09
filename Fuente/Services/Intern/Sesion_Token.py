@@ -14,10 +14,11 @@ def Get_key():
 
 def CreateToken(usr):
     # Datos que quieres incluir en el token (payload)
+    delta = int(os.getenv("JWT_EXPIRATION"))
     payload = {
         '_id': usr.Id,  # El ID del usuario
         'email': usr.Email,  # El nombre de usuario
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=os.getenv("JWT_EXPIRATION"))  # Expiración del token (1 hora)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=int(delta))  # Expiración del token (1 hora)
     }
 
     # Generar el token JWT

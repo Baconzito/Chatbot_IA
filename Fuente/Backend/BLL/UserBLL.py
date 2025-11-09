@@ -1,6 +1,7 @@
 from Backend.MPP import UserMPP 
 from BE.Classes.User import User as UserBE
 from Services.Intern.Password_Encripter import HashPassword as HP
+from Services.Intern.Password_Encripter import CheckPassword as CP
 from Services.Intern.Sesion_Token import CreateToken, DecodeToken
 import re
 
@@ -40,7 +41,8 @@ class UserBLL:
         email = user_data.get('email')
         password = user_data.get('password')
         oUsuario = UserBE(email, HP(password))
-        if(self.users_MPP.login(oUsuario)):
+        bd_pass = self.users_MPP.login(oUsuario)
+        if(CP(password, bd_pass)):
             return CreateToken(oUsuario)
         return 1 # Credenciales inválidas
         
