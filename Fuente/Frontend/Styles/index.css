@@ -222,11 +222,30 @@ i{
 
 .mensaje {
     display: flex;
-    justify-items: end;
-    justify-content: flex-end;
-    margin: 10px 0;
-    
+    margin: 8px 0;
+    width: 100%;
+    position: relative;
 }
+
+/* Mensajes del usuario (a la derecha) */
+.mensaje.user {
+    justify-content: flex-end;
+}
+
+.mensaje.user .message-text {
+    /* background-color: #2751dd; */
+    background: linear-gradient(135deg, #2751dd, #8b5cf6) ;
+    color: #fff;
+    border-radius: 12px 12px 0 12px;
+    padding: 10px 14px;
+    max-width: 60%;
+    word-wrap: break-word;
+    margin-left: auto; 
+    position: relative;
+    right: -235%;
+}
+
+
 
 .message-header {
     display: flex;
@@ -242,14 +261,14 @@ i{
     margin-right: 15px;
 }
 
-.avatar {
+/* .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background: #bdbdbd;
     background-size: cover;
     background-position: center;
-}
+} */
 
 .message-name {
     margin-top: 5px;
@@ -310,18 +329,21 @@ i{
     width: 30%;
 }
 
-.menuElement{
-    background-color: #2751dd;
+.menuElement {
+    background: linear-gradient(135deg, #2751dd 0%, #8b5cf6 100%);
     width: 100%;
-    height: 100%;
+    min-height: 50px;
     border-radius: 8px;
     color: #fff;
-    align-content: center;
     margin: 5px;
+    padding: 8px 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .menuElement p{
-    margin: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
 }
 
 .menu-option {
@@ -337,7 +359,7 @@ i{
 }
 
 .menu-option.selected {
-  background-color: #7671fa;
+  background-color: #9f9cff;
   color: white;
   font-weight: bold;
 }
