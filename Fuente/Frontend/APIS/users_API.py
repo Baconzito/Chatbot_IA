@@ -16,8 +16,9 @@ def register():
 
 
 #Actualizacion contraseña
-@users_bp.route("/<int:user_id>/password", methods=["PUT"])
-def update_user_password(user_id):
+@users_bp.route("/change_password", methods=["PUT"])
+def update_user_password():
+    data = request.json
     return jsonify({'message': "Contraseña actualizada"}), 200
 
 
