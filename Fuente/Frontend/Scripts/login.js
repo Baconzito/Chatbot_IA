@@ -50,7 +50,7 @@ if (loginForm) {
             const response = await fetch(`${API_BASE_URL}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ `email=${email}`, `password=${password}` }),
+                body: JSON.stringify({ 'email':email, 'password':password}),
             });
 
             const data = await response.json();
