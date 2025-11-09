@@ -36,3 +36,20 @@ window.onload = function() {
         window.location.href = "index.html";
     };
 };
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+const token = getCookie('token');
+if (token) {
+    // Decodificá el payload (solo lectura, sin verificar)
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log("Usuario logueado:", payload.email);
+} else {
+    window.location.href = 'login.html';
+}
+
+token();

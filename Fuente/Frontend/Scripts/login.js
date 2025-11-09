@@ -29,7 +29,7 @@ function limpiarError() {
 
 // Evento de envío del formulario
 if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         limpiarError();
 
@@ -46,16 +46,26 @@ if (loginForm) {
             return;
         }
 
-        const usuario = new Usuario(email, password);
-        const loginExitoso = sesion.iniciarSesion(usuario);
-        
-        
-        if (loginExitoso != 1) {
-            document.cookie = 
+        try {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ `email=${email}`, `password=${password}` }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showAlert(data.message || 'Credenciales inválidas');
+                return;
+            }
+
+            document.cookie = `token=${data.token}; path=/; max-age=3600;`;
             window.location.href = 'index.html';
 
-        } else {
-            showAlert('Correo o contraseña incorrectos');
+        } catch (err) {
+            console.error('Error en login:', err);
+            showAlert('Error al conectar con el servidor.');
         }
     });
 }
@@ -66,3 +76,6 @@ if (registerBtn) {
         window.location.href = 'register.html';
     });
 }
+
+
+
