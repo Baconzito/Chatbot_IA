@@ -65,15 +65,23 @@ class Mpp_User:
             self.connection.close()
 
     def login(self, usr):
-        """Autentica a un usuario por email y contraseña."""
+        """
+        Autentica a un usuario buscando primero por email y luego validando contraseña.
+        Returns:
+            tuple: (bool, str) - (éxito/fallo, id del usuario si éxito o None si fallo)
+        """
         try:
             docs = self.connection.find_documents(
                 self.db_name,
                 self.collection,
-                query={"email": usr.Email, "password": usr.Password},
+                query={"email": usr.Email},
                 limit=1
             )
-            return docs is not None and len(docs) > 0
+            if docs and len(docs) > 0:
+                stored_user = docs[0]
+                return stored_user["password"]
         except Exception as e:
             print(f"Error during login: {e}")
-            return False
+            return False, None
+        finally:
+            self.connection.close()
