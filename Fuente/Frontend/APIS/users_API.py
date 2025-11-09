@@ -30,8 +30,8 @@ def logout():
 @users_bp.route("/login", methods=["POST"])
 def login():
     try:
-        print(" JSON recibido:", request.json)
-        token = user_BLL.login(request.json) # json contiene email:<email>, password:<password>
+        data = request.json() # json contiene email:<email>, password:<password>
+        token = user_BLL.login(data) # json contiene email:<email>, password:<password>
         if (token != 1):
             return jsonify({'token': token}), 200
         else:
