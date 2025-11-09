@@ -11,15 +11,13 @@ load_dotenv(dotenv_path=env_path)
 
 def Get_key():
     return os.getenv("JWT_SECRET_KEY")
-def Set_key(key):
-    pass
 
 def CreateToken(usr):
     # Datos que quieres incluir en el token (payload)
     payload = {
         '_id': usr.Id,  # El ID del usuario
         'email': usr.Email,  # El nombre de usuario
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Expiración del token (1 hora)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=os.getenv("JWT_EXPIRATION"))  # Expiración del token (1 hora)
     }
 
     # Generar el token JWT
