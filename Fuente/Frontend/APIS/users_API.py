@@ -3,9 +3,9 @@ from Backend.BLL.UserBLL import UserBLL  # Fixed import
 
 users_bp = Blueprint('users_API', __name__, url_prefix='/users')
 
-user_BLL = UserBLL()  # Create instance of UserBLL directly
+user_BLL = UserBLL()
 
-#ABM de usuarios
+
 @users_bp.route("/register", methods=["POST"])
 def register():
     print("Entro al registro")
@@ -14,32 +14,30 @@ def register():
     else:
         return jsonify({'message': "Error en el registro"}), 400
 
-
-#Actualizacion contraseña
 @users_bp.route("/change_password", methods=["PUT"])
 def update_user_password():
-    data = request.json
+    data = request.json # json contiene email:<email>, password:<new_password>
     return jsonify({'message': "Contraseña actualizada"}), 200
-
 
 @users_bp.route("/logout", methods=["POST"])
 def logout():
-    return jsonify({'message': "Logout exitoso"}), 200
+    if(user_BLL.logout(request.json)): # json contiene token:<sesion_token>
+        return jsonify({'message': "Logout exitoso"}), 200
     
 @users_bp.route("/login", methods=["POST"])
 def login():
     try:
-        if (user_BLL.login(request.json)):
-            return jsonify({'message':"login exitoso"}), 200
+        token = user_BLL.login(request.json) # json contiene email:<email>, password:<password>
+        if (token != 1):
+            return jsonify({'token': token}), 200
         else:
             return jsonify({'message': "Credenciales inválidas"}), 401
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#Obtener usuario
-@users_bp.route("/<int:user_id>", methods=["GET"])
-def get_user(user_id):
-    if (user_BLL.get_user(user_id)):
+@users_bp.route("/get_user", methods=["GET"])
+def get_user():
+    if (user_BLL.get_user(request.json)): # json contiene token:<sesion_token>
         return jsonify({'message': "Usuario encontrado"}), 200
     else:
         return jsonify({'message': "Usuario no encontrado"}), 401
