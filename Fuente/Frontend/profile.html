@@ -9,20 +9,30 @@
     <div class="profile-container">
         <h2>Datos del Usuario</h2>
         <div class="profile-img">
-            <img id="user-img" src="" alt="Imagen de usuario">
+            <img id="user-img" alt="Imagen de usuario">
             <input class="input_IMG" type="file" >
         </div>
         <div class="profile-data">
-            <label>Nombre:</label>
-            <span class="user-nombre"></span><br>
-            <label>Apellido:</label>
-            <span class="user-apellido"></span><br>
-            <label>Número:</label>
-            <span class="user-numero"></span><br>
-            <label>Email:</label>
-            <span class="user-mail"></span><br>
-            <label>Contraseña:</label>
-            <input type="password" id="user-pass" value="********" disabled>
+            <div class="personal-data">
+                <label class="label">Nombre:</label>
+                <span class="span user-nombre"></span>
+            </div><br>
+            <div class="personal-data">
+                <label class="label">Apellido:</label>
+                <span class="span user-apellido"></span>
+            </div><br>
+            <div class="personal-data">
+                <label class="label">Número:</label>
+                <span class="span user-numero"></span>
+            </div><br>
+            <div class="personal-data">
+                <label class="label">Email:</label>
+                <span class="span user-mail"></span>
+            </div><br>
+            <div class="personal-data">
+                <label class="label">Contraseña:</label>
+                <input type="span password" id="user-pass" value="********" disabled>
+            </div>
         </div>
         <button class="change-pass-btn">Cambiar Contraseña</button>
         <button class="back-btn" class="secondary-btn">Volver</button>

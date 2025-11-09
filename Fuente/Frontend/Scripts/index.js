@@ -44,37 +44,17 @@ function agregarMensaje(nombre, mensaje, tipo) {
 
 //#endregion
 //#region handlers y eventos
+
 // Manejar envío de mensaje
-function handleMensajeEnvio() {
-    const mensaje = elements.promptInput.value.trim();
+function MensajeEnvio(mensj) {
+    const mensaje = mensj;
     if (!mensaje) return;
 
     agregarMensaje('Usuario', mensaje, 'user');
     elements.promptInput.value = '';
 
-    // Mock response
-    setTimeout(() => {
-        let a = getMenuById();
-        agregarMensaje('UaiFy', a["Mensaje"], 'UaiFy');
-    }, 500);
 }
 
-// Eventos del menú lateral
-// elements.menuButton.addEventListener('click', function (e) {
-//     e.stopPropagation();
-//     elements.menuDropdown.classList.toggle('show');
-//     elements.mainContent.classList.toggle('menu-open');
-// });
-
-document.addEventListener('click', function (event) {
-    if (
-        !elements.menuDropdown.contains(event.target) &&
-        !elements.menuButton.contains(event.target)
-    ) {
-        elements.menuDropdown.classList.remove('show');
-        elements.mainContent.classList.remove('menu-open');
-    }
-});
 
 // Evento de logout
 if (elements.logoutBtn) {
@@ -84,11 +64,11 @@ if (elements.logoutBtn) {
 }
 
 // Eventos de envío de mensaje
-elements.sendButton.addEventListener('click', handleMensajeEnvio);
+elements.sendButton.addEventListener('click', MensajeEnvio);
 elements.promptInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         e.preventDefault();
-        handleMensajeEnvio();
+        MensajeEnvio();
     }
 });
 
@@ -119,6 +99,7 @@ document.addEventListener("click", (e) => {
 });
 
 // Add this after the API_BASE_URL import
+const chat_mensaje = document.querySelector(".chat-mensaje");
 async function getMenuById(menuId = "1") {
     try {
         const response = await fetch(`${API_BASE_URL}/chat/get_menu/${menuId}`, {
@@ -138,6 +119,47 @@ async function getMenuById(menuId = "1") {
         console.group('Menu Data Retrieved:');
         console.log('Complete menu object:', menu);
         console.log('Menu structure:', JSON.stringify(menu, null, 2));
+        let documentFragment = document.createDocumentFragment();
+        
+        let menuElement = document.createElement("div");
+        menuElement.classList.add("menuElement");
+
+        // Mostrar el mensaje principal
+        let mensajeTitulo = document.createElement("p");
+        mensajeTitulo.textContent = menu.Mensaje;
+        menuElement.appendChild(mensajeTitulo);
+
+        // Mostrar las opciones
+        if (Array.isArray(menu.Opciones)) {
+        menu.Opciones.forEach(opcion => {
+            let divOpcion = document.createElement("div");
+            divOpcion.classList.add("menu-option");
+            divOpcion.textContent = opcion.Titulo;
+            divOpcion.dataset.idMenu = opcion.id_menu;
+
+            // (Opcional) agregar listener para usar el ID luego
+            divOpcion.addEventListener("click", () => {
+                const opcionesDOM = menuElement.querySelectorAll(".menu-option");
+                opcionesDOM.forEach( op =>{
+                    op.style.pointerEvents = "none";
+                    op.classList.add("disabled");
+                });
+                divOpcion.classList.add("selected");
+                // let divMensaje = document.createElement("DIV"); 
+                MensajeEnvio(divOpcion.textContent);
+                getMenuById(divOpcion.dataset.idMenu);
+            });
+            documentFragment.appendChild(divOpcion);
+            // documentFragment.appendChild(MensajeEnvio(divOpcion.textContent));
+        });
+        } 
+        else {
+            console.warn("No hay opciones en el menú:", menu);
+        }
+        menuElement.appendChild(documentFragment);
+    
+        chat_mensaje.appendChild(menuElement);
+
         if (menu.items) {
             console.log('Menu items:', menu.items);
         }
