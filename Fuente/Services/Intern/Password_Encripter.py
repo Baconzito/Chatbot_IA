@@ -5,6 +5,6 @@ import bcrypt
 def HashPassword(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-# Para verificar la contraseña (al momento de iniciar sesión)
+# Para verificar la contraseña (login)
 def CheckPassword(password, hashed_password):
-    return bcrypt.checkpw(HashPassword(password), hashed_password)
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
