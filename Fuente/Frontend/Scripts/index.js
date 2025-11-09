@@ -109,11 +109,24 @@ const generarMensajeUsuario = (mensj) => {
 const chat_mensaje = document.querySelector(".chat-mensaje");
 async function getMenuById(menuId = "1") {
     try {
-        const response = await fetch(`${API_BASE_URL}/chat/get_menu/${menuId}`, {
-            method: 'GET',
+        const token = cookieStore.get('token');
+        const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ token: token })
+
+        });
+
+        const chatId = (await chatdata.json()).id_chat; /*FALTA GUARDAR EN COOKIES*/
+
+        const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id_menu: menuId, id_chat: chatId})
         });
 
         if (!response.ok) {
