@@ -64,14 +64,7 @@ if (elements.logoutBtn) {
     });
 }
 
-// Eventos de envío de mensaje
-elements.sendButton.addEventListener('click', MensajeEnvio);
-elements.promptInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        MensajeEnvio();
-    }
-});
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const profileMock = document.querySelector('.div-profile');
