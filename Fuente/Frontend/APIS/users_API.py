@@ -14,9 +14,12 @@ def register():
     else:
         return jsonify({'message': "Error en el registro"}), 400
 
+
+#Actualizacion contraseña
 @users_bp.route("/change_password", methods=["PUT"])
 def update_user_password():
     data = request.json # json contiene email:<email>, password:<new_password>
+
     return jsonify({'message': "Contraseña actualizada"}), 200
 
 @users_bp.route("/logout", methods=["POST"])
@@ -35,9 +38,13 @@ def login():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+#Obtener usuario
+
 @users_bp.route("/get_user", methods=["GET"])
 def get_user():
     if (user_BLL.get_user(request.json)): # json contiene token:<sesion_token>
+
         return jsonify({'message': "Usuario encontrado"}), 200
     else:
         return jsonify({'message': "Usuario no encontrado"}), 401

@@ -9,8 +9,6 @@ const elements = {
     chatContainer: document.getElementById('chat-container'),
     promptInput: document.getElementById('prompt'),
     sendButton: document.getElementById('send-button'),
-    // menuButton: document.getElementById('menu-button'),
-    // menuDropdown: document.getElementById('menu-dropdown'),
     mainContent: document.getElementById('main-content'),
     logoutBtn: document.getElementById('logout-btn'),
 };
@@ -64,14 +62,7 @@ if (elements.logoutBtn) {
     });
 }
 
-// Eventos de envío de mensaje
-elements.sendButton.addEventListener('click', MensajeEnvio);
-elements.promptInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        MensajeEnvio();
-    }
-});
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const profileMock = document.querySelector('.div-profile');

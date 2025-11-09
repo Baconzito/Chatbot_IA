@@ -49,8 +49,11 @@ if (loginForm) {
         const usuario = new Usuario(email, password);
         const loginExitoso = sesion.iniciarSesion(usuario);
         
-        if (loginExitoso) {
+        
+        if (loginExitoso != 1) {
+            document.cookie = 
             window.location.href = 'index.html';
+
         } else {
             showAlert('Correo o contraseña incorrectos');
         }

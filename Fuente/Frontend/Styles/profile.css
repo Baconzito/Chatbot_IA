@@ -14,7 +14,7 @@ body {
     font-family: Arial, sans-serif;
     background: var(--color-bg);
     color: var(--color-text);
-    background: linear-gradient(135deg, #92b6ff, #dcdcdc);
+    background: linear-gradient(135deg, #92b6ff, #2563eb);
     height: 93vh;
 }
 
