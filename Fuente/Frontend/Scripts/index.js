@@ -38,8 +38,9 @@ function crearElementoMensaje(nombre, mensaje, tipo) {
 // Agregar mensaje al chat
 function agregarMensaje(nombre, mensaje, tipo) {
     const mensajeElemento = crearElementoMensaje(nombre, mensaje, tipo);
-    elements.chatContainer.appendChild(mensajeElemento);
+    
     elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
+    return elements.chatContainer.appendChild(mensajeElemento);
 }
 
 //#endregion
@@ -48,13 +49,13 @@ function agregarMensaje(nombre, mensaje, tipo) {
 // Manejar envío de mensaje
 function MensajeEnvio(mensj) {
     const mensaje = mensj;
-    if (!mensaje) return;
+    if (!mensaje) return null;
 
-    agregarMensaje('Usuario', mensaje, 'user');
+    const mensajeElemento = crearElementoMensaje('Usuario', mensaje, 'user');
     elements.promptInput.value = '';
 
+    return mensajeElemento; 
 }
-
 
 // Evento de logout
 if (elements.logoutBtn) {
@@ -98,6 +99,21 @@ document.addEventListener("click", (e) => {
     }
 });
 
+
+const generarMensajeUsuario = (mensj) => {
+    const contenedor = document.createElement("DIV");
+    contenedor.classList.add("mensaje", "user");
+
+    const burbuja = document.createElement("DIV");
+    burbuja.classList.add("message-text");
+    burbuja.textContent = mensj;
+
+    contenedor.appendChild(burbuja);
+    return contenedor;
+};
+
+
+
 // Add this after the API_BASE_URL import
 const chat_mensaje = document.querySelector(".chat-mensaje");
 async function getMenuById(menuId = "1") {
@@ -128,6 +144,8 @@ async function getMenuById(menuId = "1") {
         let mensajeTitulo = document.createElement("p");
         mensajeTitulo.textContent = menu.Mensaje;
         menuElement.appendChild(mensajeTitulo);
+        let separador = document.createElement("HR");
+        menuElement.appendChild(separador);
 
         // Mostrar las opciones
         if (Array.isArray(menu.Opciones)) {
@@ -145,8 +163,7 @@ async function getMenuById(menuId = "1") {
                     op.classList.add("disabled");
                 });
                 divOpcion.classList.add("selected");
-                // let divMensaje = document.createElement("DIV"); 
-                MensajeEnvio(divOpcion.textContent);
+                chat_mensaje.appendChild(generarMensajeUsuario(divOpcion.textContent));
                 getMenuById(divOpcion.dataset.idMenu);
             });
             documentFragment.appendChild(divOpcion);
