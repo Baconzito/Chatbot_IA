@@ -1,14 +1,20 @@
 from Backend.MPP.chatMPP import ChatMPP
 from datetime import datetime
 from typing import Optional, Dict, Any
+from Services.Intern.Sesion_Token import DecodeToken
 
 class ChatBLL:
     def __init__(self):
         self.chat_MPP = ChatMPP()
 
-    def get_menu(self, menu_id):
+    def get_menu(self, data):
         # Lógica para obtener el menú por ID
-        return self.chat_MPP.get_menu_by_id(menu_id)
+        menu_id = data.get('id_menu')
+        chat_id = data.get('id_chat')
+        if(menu_id == "75"):
+            return self.chat_MPP.close_chat(chat_id)    
+        return self.chat_MPP.get_menu_by_id(chat_id, menu_id)
+ 
     
     def create_chat(self, chat_data: Dict[str, Any]) -> Optional[str]:
         """
@@ -17,25 +23,15 @@ class ChatBLL:
         Retorna el id (string) del chat creado o None en caso de error.
         """
         try:
-            id_usuario = chat_data.get('id_usuario') or chat_data.get('user_id') or chat_data.get('userId')
+            token = chat_data.get('token')
+            id_usuario = DecodeToken(token)["_id"]
             if not id_usuario:
-                raise ValueError("Falta id_usuario en chat_data")
+                raise ValueError("Falta el token o es inválido")
 
-            iniciado = datetime.utcnow().isoformat()
-            inserted_id = self.chat_MPP.create_chat(id_usuario=id_usuario, iniciado=iniciado)
+            inserted_id = self.chat_MPP.create_chat(id_usuario=id_usuario)
             return inserted_id  # puede ser str o None
         except Exception as e:
             print(f"ChatBLL.create_chat error: {e}")
             return None
 
-    def close_chat(self, chat_id: str) -> bool:
-        """
-        Cierra el chat identificado por chat_id delegando en ChatMPP.
-        Retorna True si se cerró correctamente, False en caso de error o no encontrado.
-        """
-        try:
-            return self.chat_MPP.close_chat(chat_id)
-        except Exception as e:
-            print(f"ChatBLL.close_chat error: {e}")
-            return False
-
+    

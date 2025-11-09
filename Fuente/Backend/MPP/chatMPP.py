@@ -10,7 +10,7 @@ class ChatMPP:
         self.db_conection = MongoDBConnection()
         # No need for _ensure_db() since we're using MongoDB
 
-    def get_menu_by_id(self, menu_id: str) -> Optional[Dict[str, Any]]:
+    def get_menu_by_id(self, chat_id: str, menu_id: str) -> Optional[Dict[str, Any]]:
         """
         Retrieves a menu by its ID using the MongoDB connection.
         
@@ -25,12 +25,13 @@ class ChatMPP:
                 menu_id=menu_id,
                 close_after=True
             )
+            self.add_menu_to_chat(chat_id, menu_id)
             return menu
         except Exception as e:
             print(f"Error retrieving menu from database: {e}")
             return None
 
-    def create_chat(self, id_usuario: str, iniciado: Optional[str] = None) -> Optional[str]:
+    def create_chat(self, id_usuario: str, id_menu: str):
         """
         Crea un documento Chat en la colección 'Chats'.
         Args:
@@ -40,11 +41,11 @@ class ChatMPP:
             inserted_id (str) del chat creado o None en caso de error
         """
         try:
-            iniciado = iniciado or datetime.utcnow().isoformat()
+            iniciado = datetime.utcnow().isoformat()
             doc = {
                 "id_usuario": id_usuario,
                 "iniciado": iniciado,
-                "estado": True
+                "activo": True
             }
             inserted_id = self.db_conection.insert_document(
                 db_name="chatbot_ia",
@@ -59,11 +60,32 @@ class ChatMPP:
             print(f"Error creating chat: {e}")
             return None
 
-    def close_chat(self, chat_id: str) -> bool:
+    def add_menu_to_chat(self, id_chat, id_menu):
+        if not id_menu or not id_chat:
+            return None
+        try:
+            enviado = datetime.utcnow().isoformat()
+            doc = {
+                "id_chat": id_chat,
+                "enviado": enviado,
+                "id_menu": id_menu
+            }
+            inserted_id = self.db_conection.insert_document(
+                db_name="chatbot_ia",
+                collection_name="Messages",
+                document=doc,
+                close_after=True
+            )
+            return str(inserted_id) if inserted_id else None
+        except Exception as e:
+            print(f"Error adding menu to chat: {e}")
+            return None
+
+    def close_chat(self, chat_id: str):
         """
         Marca el chat como cerrado (estado = False).
         Se asume que el identificador del chat es un string (no ObjectId).
-        Busca por varias posibles claves (_id, id, chat_id, id_chat) y devuelve
+        Busca por varias posibles claves (_id,) y devuelve
         True si se encontró el documento (aunque ya estuviera cerrado), False en caso contrario.
         """
         try:
@@ -83,13 +105,14 @@ class ChatMPP:
 
             result = db["Chats"].update_one(
                 query,
-                {"$set": {"estado": False}}
+                {"$set": {"activo": False}}
             )
-            # matched_count > 0 indica que se encontró el documento
-            return result.matched_count > 0
+            if result.matched_count > 0:
+                return self.get_menu_by_id(chat_id, id_menu="75")
+            return None
         except Exception as e:
             print(f"Error closing chat: {e}")
-            return False
+            return None
         finally:
             try:
                 self.db_conection.close()
