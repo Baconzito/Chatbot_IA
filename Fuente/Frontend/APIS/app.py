@@ -16,8 +16,8 @@ CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 
 # Blueprints de APIs
-#app.register_blueprint(Users_API)
 app.register_blueprint(Chat_API)
+app.register_blueprint(Users_API)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
