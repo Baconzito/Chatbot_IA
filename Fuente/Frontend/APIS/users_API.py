@@ -8,19 +8,12 @@ user_BLL = UserBLL()  # Create instance of UserBLL directly
 #ABM de usuarios
 @users_bp.route("/register", methods=["POST"])
 def register():
+    print("Entro al registro")
     if(user_BLL.new_user(request.json)):
         return jsonify({'message': "Registro exitoso"}), 200
     else:
         return jsonify({'message': "Error en el registro"}), 400
 
-@users_bp.route("/<int:user_id>", methods=["DELETE"])
-def delete_user(user_id):
-    return jsonify({'message': "Usuario eliminado"}), 200
-
-#Actualizacion general
-@users_bp.route("/<int:user_id>", methods=["PUT"])
-def update_user(user_id):
-    return jsonify({'message': "Actualizaciion exitosa"}), 200
 
 #Actualizacion contraseña
 @users_bp.route("/<int:user_id>/password", methods=["PUT"])
@@ -32,13 +25,8 @@ def update_user_password(user_id):
 def logout():
     return jsonify({'message': "Logout exitoso"}), 200
     
-#Login vía parámetros en la ruta: /users/login
 @users_bp.route("/login", methods=["POST"])
 def login():
-    """
-    Login vía parámetros en la ruta: /users/login
-    Nota: pasar credenciales en la URL es inseguro; usar POST body en producción.
-    """
     try:
         if (user_BLL.login(request.json)):
             return jsonify({'message':"login exitoso"}), 200
@@ -50,4 +38,8 @@ def login():
 #Obtener usuario
 @users_bp.route("/<int:user_id>", methods=["GET"])
 def get_user(user_id):
-    return jsonify({'message': "Usuario encontrado"}), 200
+    if (user_BLL.get_user(user_id)):
+        return jsonify({'message': "Usuario encontrado"}), 200
+    else:
+        return jsonify({'message': "Usuario no encontrado"}), 401
+    

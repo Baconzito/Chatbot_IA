@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
-from Backend.BLL.chatBLL import ChatBLL  # Changed to import the correct class name
+from Backend.BLL.chatBLL import ChatBLL
 
 chat_bp = Blueprint('chat_API', __name__, url_prefix='/chat')
 
-chat_BLL = ChatBLL()  # Use the correct class name
+chat_BLL = ChatBLL()
 
 @chat_bp.route("/get_menu/<string:menu_id>", methods=["GET"])
 def get_menu(menu_id):
