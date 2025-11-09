@@ -1,5 +1,6 @@
 from Services.Extern.Conection import MongoDBConnection
 from BE.Classes.User import User
+import datetime
 
 class Mpp_User:
     def __init__(self):
@@ -30,7 +31,8 @@ class Mpp_User:
         try:
             user_doc = {
                 "Email": usr.Email,
-                "Password": usr.Password
+                "Password": usr.Password,
+                "ultima_modificacinon": datetime.datetime.utcnow()
             }
             result = self.connection.insert_document(
                 self.db_name,
