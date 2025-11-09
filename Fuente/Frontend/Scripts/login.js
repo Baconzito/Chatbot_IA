@@ -1,6 +1,6 @@
 import { Sesion } from './Clases/Sesion.js';
 import { Usuario } from './Clases/Usuario.js';
-import { validateEmail, showAlert } from './utils.js';
+import { validateEmail,API_BASE_URL ,showAlert } from './utils.js';
 
 const sesion = new Sesion();
 
@@ -36,48 +36,49 @@ if (loginForm) {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        if (!email || !password) {
-            mostrarError('Por favor, completa todos los campos.');
-            return;
-        }
+        // if (!email || !password) {
+        //     mostrarError('Por favor, completa todos los campos.');
+        //     return;
+        // }
 
-        if (!validateEmail(email)) {
-            showAlert('Correo electrónico no válido');
-            return;
-        }
+        // if (!validateEmail(email)) {
+        //     showAlert('Correo electrónico no válido');
+        //     return;
+        // }
 
-        window.location.href = './index.html';
+        // console.log("hola entraste");
+        // window.location.href = 'index.html';
 
-        // try {
-        //     const response = await fetch(`${API_BASE_URL}/users/login`, {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({
-        //             email: email,      
-        //             password: password
-        //         }),
-        //     });
+        try {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,      
+                    password: password
+                }),
+            });
 
             
-        //     const data = await response.json();
-        //     console.log('Respuesta del servidor:', data);
+            const data = await response.json();
+            console.log('Respuesta del servidor:', data);
 
-        //     if (!response.ok) {
-        //         showAlert(data.message || 'Credenciales inválidas');
-        //         return;
-        //     }
+            if (!response.ok) {
+                showAlert(data.message || 'Credenciales inválidas');
+                return;
+            }
 
-        //     if (data.success) {
-        //         document.cookie = `token=${data.token}; path=/; max-age=3600;`;
-        //         window.location.href = '../index.html';
-        //     } else {
-        //         showAlert(data.mensaje || 'Error al iniciar sesión');
-        //     }
+            if (data.success) {
+                document.cookie = `token=${data.token}; path=/; max-age=3600;`;
+                window.location.href = '../index.html';
+            } else {
+                showAlert(data.mensaje || 'Error al iniciar sesión');
+            }
 
-        // } catch (err) {
-        //     console.error('Error al conectar con el servidor:', err);
-        //     showAlert('Error al conectar con el servidor.');
-        // }
+        } catch (err) {
+            console.error('Error al conectar con el servidor:', err);
+            showAlert('Error al conectar con el servidor.');
+        }
     });
 }
 
