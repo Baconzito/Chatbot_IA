@@ -124,24 +124,42 @@ getToken();
 const chat_mensaje = document.querySelector(".chat-mensaje");
 
 const llamarChat = async () => {
-    const tk = getToken();
-    const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
+    try {
+        const tk = getToken();
+        const response = await fetch(`${API_BASE_URL}/chat/create_chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ token: tk })
-
         });
-        const chatId = (await chatdata.json()).id_chat;
-        document.cookie = `chat_id=${chatId}; path=/;`;
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data); // Debug log
+
+        if (!data || !data.chat_id) {
+            throw new Error('No chat_id in response');
+        }
+
+        // Set cookie with the chat_id
+        document.cookie = `chat_id=${data.chat_id}; path=/; SameSite=Strict`;
+        console.log('Cookie set:', getCookie('chat_id')); // Debug log
+        
+        return data.chat_id;
+    } catch (error) {
+        console.error('Error in llamarChat:', error);
+        return null;
+    }
 }
 
 
 
 async function getMenuById(menuId = '1'){
     try {
-
         const idChat = getCookie('chat_id');
         
         const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
