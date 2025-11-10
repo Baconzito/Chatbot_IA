@@ -115,7 +115,6 @@ function getToken() {
     try {
         const parts = token.split('.');
         if (parts.length !== 3) throw new Error('Invalid token structure');
-        // base64url -> base64
         let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
         while (base64.length % 4) base64 += '=';
         const payloadJson = atob(base64);
