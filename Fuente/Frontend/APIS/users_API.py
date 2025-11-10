@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from Backend.BLL.UserBLL import UserBLL  # Fixed import
+import traceback
 
 users_bp = Blueprint('users_API', __name__, url_prefix='/users')
 
@@ -42,13 +43,32 @@ def login():
         return jsonify({'error': str(e)}), 500
 
 
+@users_bp.route("/upload_photo", methods=["POST"])
+def upload_photo():
+    try:
+        email = request.form.get('email')
+        foto = request.files.get('foto')
+        if not email or not foto:
+            return jsonify({'message': 'Faltan datos'}), 400
+
+        if user_BLL.upload_photo(email, foto):
+            return jsonify({'message': 'Foto subida correctamente'}), 200
+        else:
+            return jsonify({'message': 'Error al guardar la foto'}), 500
+    except Exception as e:
+        print("Error en upload_photo:", traceback.format_exc())
+        return jsonify({'message': 'Error interno del servidor'}), 500
+
 #Obtener usuario
 
 @users_bp.route("/get_user", methods=["POST"])
 def get_user():
-    usr = user_BLL.get_user(request.json)
-    if (usr): # json contiene token:<sesion_token>
-        return jsonify({'message': "Usuario encontrado","usuario":usr}), 200
-    else:
-        return jsonify({'message': "Usuario no encontrado"}), 401
+    try:
+        usr = user_BLL.get_user(request.json)
+        if (usr): # json contiene token:<sesion_token>
+            return jsonify({'message': "Usuario encontrado","usuario":usr}), 200
+        else:
+            return jsonify({'message': "Usuario no encontrado"}), 401
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     

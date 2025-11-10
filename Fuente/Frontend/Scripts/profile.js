@@ -24,7 +24,6 @@ window.onload = function() {
     // } else {
     //     imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
     // }
-
     
     cambiarContrasenaBtn.addEventListener("click",()=>{
         changePassword(userPass);
@@ -51,7 +50,7 @@ const changePassword = async (pass) => {
             showAlert("Contraseña cambiada con éxito.");
         } else {
             alert("La contraseña debe tener al menos 8 caracteres.");
-        }
+    }
 }
 
 
@@ -62,12 +61,43 @@ input_IMG.addEventListener("click",()=>{
     input_foto.click();
 });
 
-input_foto.addEventListener('change', (e)=>{
+input_foto.addEventListener('change', async (e) => {
     const file = e.target.files[0];
-    if(file){
-        imagenUsuario.src = URL.createObjectURL(file);
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+        showAlert("Solo se permiten imágenes JPG o PNG.");
+        e.target.value = ""; // Limpia la selección
+        return;
+    }
+
+    // Vista previa local
+    imagenUsuario.src = URL.createObjectURL(file);
+
+    const formData = new FormData();
+    formData.append("email", mail.textContent);
+    formData.append("foto", file);
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/upload_photo`, {
+            method: "POST",
+            body: formData
+        });
+
+        if (res.ok) {
+            showAlert("Foto actualizada con éxito.");
+        } else {
+            showAlert("Error al subir la foto.");
+        }
+    } catch (err) {
+        console.error("Error al subir imagen:", err);
+        showAlert("No se pudo conectar con el servidor.");
     }
 });
+
+
 
 function getCookie(name) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -86,3 +116,36 @@ const getToken = () =>{
 document.addEventListener("DOMContentLoaded",()=>{
     getToken();
 });
+
+async function cargarPerfil() {
+    const email = mail.textContent;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/get_user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: getToken() }),
+        });
+
+        if (!res.ok) {
+            console.error('Error fetching profile:', res.status, await res.text());
+            showAlert("Error al obtener el perfil.");
+            return;
+        }
+
+        const data = await res.json();
+
+        if (data.foto) {
+            imagenUsuario.src = `${API_BASE_URL}/${data.foto}`;
+        } else {
+            imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
+        }
+    } catch (err) {
+        console.error('Error al cargar perfil:', err);
+        showAlert("No se pudo conectar con el servidor.");
+    }
+}
+
+cargarPerfil();

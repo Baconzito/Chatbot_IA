@@ -20,7 +20,8 @@ class Mpp_User:
             )
             if docs and len(docs) > 0:
                 doc = docs[0]
-                return User(doc["_id"], doc["email"], doc["password"])
+                user_id = str(doc.get("_id"))
+                return User( doc.get("email"), doc.get("password"), id=user_id, photo=doc.get("foto", None))
             return None
         except Exception as e:
             print(f"Error getting user: {e}")
@@ -83,5 +84,24 @@ class Mpp_User:
         except Exception as e:
             print(f"Error during login: {e}")
             return False, None
+        finally:
+            self.connection.close()
+            
+    def update_user_photo(self, email, photo_path):
+        """Actualiza la ruta de la foto del usuario."""
+        try:
+            self.connection.connect()
+            db = self.connection.get_database(self.db_name)
+            result = db[self.collection].update_one(
+                {"email": email},
+                {"$set": {"foto": photo_path}}
+            )
+            if(result.matched_count > 0 or result.modified_count > 0):
+                return True
+            else:
+                return False       
+        except Exception as e:
+            print(f"Error updating user photo: {e}")
+            return False
         finally:
             self.connection.close()
