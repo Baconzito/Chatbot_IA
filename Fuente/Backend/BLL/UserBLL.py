@@ -110,15 +110,19 @@ class UserBLL:
             return False
         
     def login(self, user_data):
-        email = user_data.get('email')
-        password = user_data.get('password')
-        oUsuario = UserBE(email, HP(password))
-        user_bd = self.users_MPP.login(oUsuario)
-        oUsuario.Id = str(user_bd["_id"])
-        if(CP(password, user_bd["password"])):
-            return CreateToken(oUsuario)
-        return 1 # Credenciales inválidas
-        
+        try:
+            email = user_data.get('email')
+            password = user_data.get('password')
+            oUsuario = UserBE(email, HP(password))
+            user_bd = self.users_MPP.login(oUsuario)
+            if not user_bd:
+                return None
+            oUsuario.Id = str(user_bd["_id"])
+            if(CP(password, user_bd["password"])):
+                return CreateToken(oUsuario)
+            return 1 # Credenciales inválidas
+        except Exception as e:
+            print(f"Error in login BLL: {e}")
     
     def validar_Campos(self, Email, Password):
         if(Email == "" or Password == ""):

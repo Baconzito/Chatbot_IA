@@ -109,12 +109,24 @@ function getCookie(name) {
     if (match) return match[2];
 }
 
-const getToken = () =>{
+function getToken() {
     const token = getCookie('auth_token');
-    if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        document.querySelector(".call-menu").textContent = payload.email;
+    if (!token) return null;
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) throw new Error('Invalid token structure');
+        // base64url -> base64
+        let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
+        const payloadJson = atob(base64);
+        const payload = JSON.parse(payloadJson);
+        const el = document.querySelector(".call-menu");
+        if (el && payload.email) el.textContent = payload.email;
         return token;
+    } catch (err) {
+        console.warn('auth_token inválido, limpiando cookie:', err);
+        document.cookie = 'auth_token=; path=/; Max-Age=0; SameSite=Strict';
+        return null;
     }
 }
 

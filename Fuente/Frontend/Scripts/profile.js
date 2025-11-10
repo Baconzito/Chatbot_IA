@@ -43,8 +43,8 @@ const changePassword = async (pass) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        email: mail.textContent,
-                        password: pass 
+                        email: getCookie('email'),
+                        password: pass .value
                     })
                 });
                 pass.value = "";
