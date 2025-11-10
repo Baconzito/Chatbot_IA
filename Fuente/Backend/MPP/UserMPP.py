@@ -79,7 +79,7 @@ class Mpp_User:
             )
             if docs and len(docs) > 0:
                 stored_user = docs[0]
-                return stored_user["password"]
+                return stored_user
         except Exception as e:
             print(f"Error during login: {e}")
             return False, None

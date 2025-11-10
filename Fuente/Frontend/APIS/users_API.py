@@ -32,7 +32,7 @@ def login():
     try:
         data = request.get_json() # json contiene email:<email>, password:<password>
         token = user_BLL.login(data) # json contiene email:<email>, password:<password>
-        if (token != 1):
+        if (token):
             return jsonify({'token': token}), 200
         else:
             return jsonify({'message': "Credenciales inválidas"}), 401

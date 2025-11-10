@@ -41,8 +41,9 @@ class UserBLL:
         email = user_data.get('email')
         password = user_data.get('password')
         oUsuario = UserBE(email, HP(password))
-        bd_pass = self.users_MPP.login(oUsuario)
-        if(CP(password, bd_pass)):
+        user_bd = self.users_MPP.login(oUsuario)
+        oUsuario.Id = str(user_bd["_id"])
+        if(CP(password, user_bd["password"])):
             return CreateToken(oUsuario)
         return 1 # Credenciales inválidas
         
