@@ -19,19 +19,21 @@ def register():
 @users_bp.route("/change_password", methods=["PUT"])
 def update_user_password():
     data = request.json # json contiene email:<email>, password:<new_password>
-
-    return jsonify({'message': "Contraseña actualizada"}), 200
+    if(user_BLL.update_password(data)):
+        return jsonify({'message': "Contraseña actualizada"}), 200
+    else:
+        return jsonify({'message': "Error al actualizar la contraseña"}), 400
 
 @users_bp.route("/logout", methods=["POST"])
 def logout():
     if(user_BLL.logout(request.json)): # json contiene token:<sesion_token>
-        return jsonify({'message': "Logout exitoso"}), 200
+        return jsonify({'message': "Logout exitoso"}), 200 # cerrar chat de sesion
     
 @users_bp.route("/login", methods=["POST"])
 def login():
     try:
         data = request.get_json() # json contiene email:<email>, password:<password>
-        token = user_BLL.login(data) # json contiene email:<email>, password:<password>
+        token = user_BLL.login(data) # retorna token o None
         if (token):
             return jsonify({'token': token}), 200
         else:
@@ -42,11 +44,11 @@ def login():
 
 #Obtener usuario
 
-@users_bp.route("/get_user", methods=["GET"])
+@users_bp.route("/get_user", methods=["POST"])
 def get_user():
-    if (user_BLL.get_user(request.json)): # json contiene token:<sesion_token>
-
-        return jsonify({'message': "Usuario encontrado"}), 200
+    usr = user_BLL.get_user(request.json)
+    if (usr): # json contiene token:<sesion_token>
+        return jsonify({'message': "Usuario encontrado","usuario":usr}), 200
     else:
         return jsonify({'message': "Usuario no encontrado"}), 401
     
