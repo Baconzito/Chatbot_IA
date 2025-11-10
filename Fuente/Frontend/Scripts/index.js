@@ -113,7 +113,6 @@ const getToken = () =>{
     const token = getCookie('auth_token');
     if (token) {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log("Datos del usuario:", payload);
         document.querySelector(".call-menu").textContent = payload.email;
         return token;
     }
@@ -123,10 +122,10 @@ getToken();
 
 // Add this after the API_BASE_URL import
 const chat_mensaje = document.querySelector(".chat-mensaje");
-async function getMenuById(menuId = '1'){
-    try {
-        const tk = getToken();
-        const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
+
+const llamarChat = async () => {
+    const tk = getToken();
+    const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -134,15 +133,23 @@ async function getMenuById(menuId = '1'){
             body: JSON.stringify({ token: tk })
 
         });
+        const chatId = (await chatdata.json()).id_chat;
+        document.cookie = `chat_id=${chatId}; path=/;`;
+}
 
-        const chatId = (await chatdata.json()).id_chat; /*FALTA GUARDAR EN COOKIES*/
+
+
+async function getMenuById(menuId = '1'){
+    try {
+
+        const idChat = getCookie('chat_id');
         
         const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id_menu: menuId, id_chat: chatId})
+            body: JSON.stringify({ id_menu: menuId, id_chat: idChat}),
         });
 
         if (!response.ok) {
@@ -150,11 +157,6 @@ async function getMenuById(menuId = '1'){
         }
 
         const menu = await response.json();
-        
-        // Detailed console logging
-        console.group('Menu Data Retrieved:');
-        console.log('Complete menu object:', menu);
-        console.log('Menu structure:', JSON.stringify(menu, null, 2));
         let documentFragment = document.createDocumentFragment();
         
         let menuElement = document.createElement("div");
@@ -175,7 +177,6 @@ async function getMenuById(menuId = '1'){
             divOpcion.textContent = opcion.Titulo;
             divOpcion.dataset.idMenu = opcion.id_menu;
 
-            // (Opcional) agregar listener para usar el ID luego
             divOpcion.addEventListener("click", () => {
                 const opcionesDOM = menuElement.querySelectorAll(".menu-option");
                 opcionesDOM.forEach( op =>{
@@ -187,7 +188,6 @@ async function getMenuById(menuId = '1'){
                 getMenuById(divOpcion.dataset.idMenu);
             });
             documentFragment.appendChild(divOpcion);
-            // documentFragment.appendChild(MensajeEnvio(divOpcion.textContent));
         });
         } 
         else {
@@ -197,10 +197,6 @@ async function getMenuById(menuId = '1'){
     
         chat_mensaje.appendChild(menuElement);
 
-        if (menu.items) {
-            console.log('Menu items:', menu.items);
-        }
-        console.groupEnd();
         
         return menu;
     } catch (error) {
@@ -211,24 +207,12 @@ async function getMenuById(menuId = '1'){
 
 
 
-
-
-
-// Test in DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
-    // ...existing DOMContentLoaded code...
 
-    console.log('Fetching menu data...');
     try {
+        llamarChat();
         const menu = await getMenuById();
-        if (menu) {
-            console.log('------- Menu Data -------');
-            console.log('Raw menu data:', menu);
-            console.table(menu); // Shows data in table format if possible
-            console.log('------------------------');
-        } else {
-            console.warn('No menu data received');
-        }
+        
     } catch (error) {
         console.error('Error loading menu:', error);
     }
