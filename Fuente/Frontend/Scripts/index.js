@@ -180,14 +180,12 @@ async function getMenuById(menuId = '1'){
         let menuElement = document.createElement("div");
         menuElement.classList.add("menuElement");
 
-        // Mostrar el mensaje principal
         let mensajeTitulo = document.createElement("p");
         mensajeTitulo.textContent = menu.Mensaje;
         menuElement.appendChild(mensajeTitulo);
         let separador = document.createElement("HR");
         menuElement.appendChild(separador);
 
-        // Mostrar las opciones
         if (Array.isArray(menu.Opciones)) {
         menu.Opciones.forEach(opcion => {
             let divOpcion = document.createElement("div");
