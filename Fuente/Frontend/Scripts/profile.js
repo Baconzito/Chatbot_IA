@@ -118,14 +118,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 async function cargarPerfil() {
-    const email = mail.textContent;
-
     try {
         const res = await fetch(`${API_BASE_URL}/users/get_user`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: getToken() }),
         });
 
@@ -136,9 +132,22 @@ async function cargarPerfil() {
         }
 
         const data = await res.json();
+        console.log('DEBUG get_user response:', data);
 
-        if (data.foto) {
-            imagenUsuario.src = `${API_BASE_URL}/${data.foto}`;
+        // Normalizar ubicación del usuario y del campo foto/photo
+        const user = data.usuario || data.user || data.usuario || data.usuario || data;
+        const photo = (user && (user.photo || user.foto)) || null;
+
+        if (photo) {
+            // Si es URL completa, usarla; si es ruta relativa, construir URL completo
+            if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
+                imagenUsuario.src = photo;
+            } else {
+                // Evitar doble slash
+                const base = API_BASE_URL.replace(/\/+$/, '');
+                const path = photo.replace(/^\/+/, '');
+                imagenUsuario.src = `${base}/${path}`;
+            }
         } else {
             imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
         }
