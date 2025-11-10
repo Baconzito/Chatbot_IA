@@ -114,7 +114,8 @@ const getToken = () =>{
     if (token) {
         const payload = JSON.parse(atob(token.split('.')[1]));
         console.log("Datos del usuario:", payload);
-        document.getElementById("email").textContent = payload.email;
+        document.querySelector(".call-menu").textContent = payload.email;
+        return token;
     }
 }
 
@@ -122,14 +123,15 @@ getToken();
 
 // Add this after the API_BASE_URL import
 const chat_mensaje = document.querySelector(".chat-mensaje");
-const getMenuById = async (menuId) =>{
+async function getMenuById(menuId = '1'){
     try {
+        const tk = getToken();
         const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ token: token })
+            body: JSON.stringify({ token: tk })
 
         });
 
@@ -207,7 +209,7 @@ const getMenuById = async (menuId) =>{
     }
 }
 
-getMenuById(1);
+
 
 
 
