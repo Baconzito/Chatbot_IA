@@ -22,6 +22,7 @@ async function handleLogin(email, password) {
             // Store token/session data if received
             if (data.token) {
                 document.cookie = `auth_token=${data.token}; path=/`;
+                document.cookie = `email=${email}; path=/ ; max-age=3600`;
             }
             window.location.href = 'index.html';
         } else {

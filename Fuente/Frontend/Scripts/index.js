@@ -104,12 +104,26 @@ const generarMensajeUsuario = (mensj) => {
 };
 
 
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+}
+
+const getToken = () =>{
+    const token = getCookie('auth_token');
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log("Datos del usuario:", payload);
+        document.getElementById("email").textContent = payload.email;
+    }
+}
+
+getToken();
 
 // Add this after the API_BASE_URL import
 const chat_mensaje = document.querySelector(".chat-mensaje");
-async function getMenuById(menuId = "1") {
+const getMenuById = async (menuId) =>{
     try {
-        const token = cookieStore.get('token');
         const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
             method: 'POST',
             headers: {
@@ -192,6 +206,11 @@ async function getMenuById(menuId = "1") {
         return null;
     }
 }
+
+getMenuById(1);
+
+
+
 
 // Test in DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
