@@ -1,6 +1,8 @@
 import { validateEmail, API_BASE_URL, showAlert } from './utils.js';
 
 const imagenUsuario = document.getElementById("user-img");
+const mail = document.querySelector('.user-mail');
+const cambiarContrasenaBtn = document.querySelector('.change-pass-btn');
 
 const detectarImagen = ()=>{
     if (!imagenUsuario.getAttribute("src")) {
@@ -14,39 +16,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 window.onload = function() {
-    document.getElementById('user-img').src = usuario.imagen;
+    // document.getElementById('user-img').src = usuario.imagen;
     const userPass = document.getElementById('user-pass');
     const imagenUsuario = document.getElementById('user-img');
-    if (usuario.imagen && usuario.imagen.startsWith('http')) {
-        imagenUsuario.src = usuario.imagen;
-    } else {
-        imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
-    }
+    // if (usuario.imagen && usuario.imagen.startsWith('http')) {
+    //     imagenUsuario.src = usuario.imagen;
+    // } else {
+    //     imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
+    // }
 
     
-    document.querySelector('.change-pass-btn').onclick = function() {
-        if(userPass.value != "" && userPass.value.length >= 8){
+    cambiarContrasenaBtn.addEventListener("click",()=>{
+        changePassword(userPass);
+    });
+
+    document.querySelector('.back-btn').onclick = function() {
+        window.location.href = "index.html";
+    };
+};
+
+const changePassword = async (pass) => {
+    if(pass.value != "" && pass.value.length >= 8){
             const resGet = fetch(`${API_BASE_URL}/users/change_password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: usuario.email,
-                    password: userPass.value 
+                    email: mail.textContent,
+                    password: pass 
                 })
             });
-            userPass.value = "";
+            pass.value = "";
             showAlert("Contraseña cambiada con éxito.");
         } else {
             alert("La contraseña debe tener al menos 8 caracteres.");
         }
-    };
-
-    document.querySelector('.back-btn').onclick = function() {
-        window.location.href = "index.html";
-    };
-};
+}
 
 
 const input_IMG = document.querySelector(".input-IMG");
