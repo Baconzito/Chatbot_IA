@@ -1,3 +1,5 @@
+import { validateEmail, API_BASE_URL, showAlert } from './utils.js';
+
 const imagenUsuario = document.getElementById("user-img");
 
 const detectarImagen = ()=>{
@@ -10,23 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     detectarImagen();
 });
 
-// Simulación de datos de usuario (reemplaza esto con tu lógica real)
-const usuario = {
-    nombre: "Juan",
-    apellido: "Pérez",
-    numero: "123456789",
-    mail: "juan.perez@email.com",
-    password: "********"
-};
 
 window.onload = function() {
-    document.querySelector('.user-nombre').textContent = usuario.nombre;
-    document.querySelector('.user-apellido').textContent = usuario.apellido;
-    document.querySelector('.user-numero').textContent = usuario.numero;
     document.getElementById('user-img').src = usuario.imagen;
-    document.querySelector('.user-mail').textContent = usuario.mail;
-    document.getElementById('user-pass').value = usuario.password;
-
+    const userPass = document.getElementById('user-pass');
     const imagenUsuario = document.getElementById('user-img');
     if (usuario.imagen && usuario.imagen.startsWith('http')) {
         imagenUsuario.src = usuario.imagen;
@@ -36,7 +25,22 @@ window.onload = function() {
 
     
     document.querySelector('.change-pass-btn').onclick = function() {
-        window.location.href = "cambiar_contraseña.html"; // O muestra un modal
+        if(userPass.value != "" && userPass.value.length >= 8){
+            const resGet = fetch(`${API_BASE_URL}/users/change_password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: usuario.email,
+                    password: userPass.value 
+                })
+            });
+            userPass.value = "";
+            showAlert("Contraseña cambiada con éxito.");
+        } else {
+            alert("La contraseña debe tener al menos 8 caracteres.");
+        }
     };
 
     document.querySelector('.back-btn').onclick = function() {
@@ -57,4 +61,22 @@ input_foto.addEventListener('change', (e)=>{
     if(file){
         imagenUsuario.src = URL.createObjectURL(file);
     }
+});
+
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+}
+
+const getToken = () =>{
+    const token = getCookie('auth_token');
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        document.querySelector('.user-mail').textContent = payload.email;
+        return token;
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    getToken();
 });
