@@ -84,13 +84,9 @@ iframe{
     overflow-y: auto;
 }
 
-/* #menu-dropdown.show {
-    left: 0;
-} */
 
 .profile-mock {
     margin-bottom: 10px;
-    /* flex-shrink: 0; */
     color: #fff;
     display: flex; 
     align-items: center; 
@@ -112,8 +108,9 @@ iframe{
     min-height: 50px; 
     border-radius: 50%; 
     background-color: #bdbdbd; 
-    background-image: url('https://randomuser.me/api/portraits/men/1.jpg'); 
+    background-image: url('../../Imagenes/GenericUserProfile.png'); ; 
     background-size: cover;
+    background-color: #1e40af;
     
     z-index: 2;
 }
@@ -129,7 +126,6 @@ i{
     width: 80%;
     height: 0;
     border-radius: 8px;
-    /* background: #174cfb; */
     background-color: #f6f6f6;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     position: absolute;
@@ -234,13 +230,11 @@ i{
     position: relative;
 }
 
-/* Mensajes del usuario (a la derecha) */
 .mensaje.user {
     justify-content: flex-end;
 }
 
 .mensaje.user .message-text {
-    /* background-color: #2751dd; */
     background: linear-gradient(135deg, #2751dd, #8b5cf6) ;
     color: #fff;
     border-radius: 12px 12px 0 12px;
@@ -267,15 +261,6 @@ i{
     align-items: center;
     margin-right: 15px;
 }
-
-/* .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #bdbdbd;
-    background-size: cover;
-    background-position: center;
-} */
 
 .message-name {
     margin-top: 5px;
