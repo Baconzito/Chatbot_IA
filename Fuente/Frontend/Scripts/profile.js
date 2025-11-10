@@ -1,4 +1,8 @@
+import { validateEmail, API_BASE_URL, showAlert } from './utils.js';
+
 const imagenUsuario = document.getElementById("user-img");
+const mail = document.querySelector('.user-mail');
+const cambiarContrasenaBtn = document.querySelector('.change-pass-btn');
 
 const detectarImagen = ()=>{
     if (!imagenUsuario.getAttribute("src")) {
@@ -10,39 +14,50 @@ document.addEventListener("DOMContentLoaded", () => {
     detectarImagen();
 });
 
-// Simulación de datos de usuario (reemplaza esto con tu lógica real)
-const usuario = {
-    nombre: "Juan",
-    apellido: "Pérez",
-    numero: "123456789",
-    mail: "juan.perez@email.com",
-    password: "********"
-};
 
 window.onload = function() {
-    document.querySelector('.user-nombre').textContent = usuario.nombre;
-    document.querySelector('.user-apellido').textContent = usuario.apellido;
-    document.querySelector('.user-numero').textContent = usuario.numero;
-    document.getElementById('user-img').src = usuario.imagen;
-    document.querySelector('.user-mail').textContent = usuario.mail;
-    document.getElementById('user-pass').value = usuario.password;
-
+    // document.getElementById('user-img').src = usuario.imagen;
+    const userPass = document.getElementById('user-pass');
     const imagenUsuario = document.getElementById('user-img');
-    if (usuario.imagen && usuario.imagen.startsWith('http')) {
-        imagenUsuario.src = usuario.imagen;
-    } else {
-        imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
-    }
-
+    // if (usuario.imagen && usuario.imagen.startsWith('http')) {
+    //     imagenUsuario.src = usuario.imagen;
+    // } else {
+    //     imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
+    // }
     
-    document.querySelector('.change-pass-btn').onclick = function() {
-        window.location.href = "cambiar_contraseña.html"; // O muestra un modal
-    };
+    cambiarContrasenaBtn.addEventListener("click",()=>{
+        changePassword(userPass);
+    });
 
     document.querySelector('.back-btn').onclick = function() {
         window.location.href = "index.html";
     };
 };
+
+const changePassword = async (pass) => {
+    try{
+        if(pass.value != "" && pass.value.length >= 8){
+                const resGet = fetch(`${API_BASE_URL}/users/change_password`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: getCookie('email'),
+                        password: pass .value
+                    })
+                });
+                pass.value = "";
+                showAlert("Contraseña cambiada con éxito.");
+            } else {
+                alert("La contraseña debe tener al menos 8 caracteres.");
+        }
+    }
+    catch(err){
+        console.error("Error al cambiar la contraseña:", err);
+        showAlert("No se pudo conectar con el servidor.");
+    }
+}
 
 
 const input_IMG = document.querySelector(".input-IMG");
@@ -52,9 +67,100 @@ input_IMG.addEventListener("click",()=>{
     input_foto.click();
 });
 
-input_foto.addEventListener('change', (e)=>{
+input_foto.addEventListener('change', async (e) => {
     const file = e.target.files[0];
-    if(file){
-        imagenUsuario.src = URL.createObjectURL(file);
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+        showAlert("Solo se permiten imágenes JPG o PNG.");
+        e.target.value = ""; // Limpia la selección
+        return;
+    }
+
+    // Vista previa local
+    imagenUsuario.src = URL.createObjectURL(file);
+
+    const formData = new FormData();
+    formData.append("email", mail.textContent);
+    formData.append("foto", file);
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/upload_photo`, {
+            method: "POST",
+            body: formData
+        });
+
+        if (res.ok) {
+            showAlert("Foto actualizada con éxito.");
+        } else {
+            showAlert("Error al subir la foto.");
+        }
+    } catch (err) {
+        console.error("Error al subir imagen:", err);
+        showAlert("No se pudo conectar con el servidor.");
     }
 });
+
+
+
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+}
+
+const getToken = () =>{
+    const token = getCookie('auth_token');
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        document.querySelector('.user-mail').textContent = payload.email;
+        return token;
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    getToken();
+});
+
+async function cargarPerfil() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/get_user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: getToken() }),
+        });
+
+        if (!res.ok) {
+            console.error('Error fetching profile:', res.status, await res.text());
+            showAlert("Error al obtener el perfil.");
+            return;
+        }
+
+        const data = await res.json();
+        console.log('DEBUG get_user response:', data);
+
+        // Normalizar ubicación del usuario y del campo foto/photo
+        const user = data.usuario || data.user || data.usuario || data.usuario || data;
+        const photo = (user && (user.photo || user.foto)) || null;
+
+        if (photo) {
+            // Si es URL completa, usarla; si es ruta relativa, construir URL completo
+            if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
+                imagenUsuario.src = photo;
+            } else {
+                // Evitar doble slash
+                const base = API_BASE_URL.replace(/\/+$/, '');
+                const path = photo.replace(/^\/+/, '');
+                imagenUsuario.src = `${base}/${path}`;
+            }
+        } else {
+            imagenUsuario.src = "../Imagenes/GenericUserProfile.png";
+        }
+    } catch (err) {
+        console.error('Error al cargar perfil:', err);
+        showAlert("No se pudo conectar con el servidor.");
+    }
+}
+
+// cargarPerfil();

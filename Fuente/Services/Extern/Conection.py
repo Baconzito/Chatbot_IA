@@ -4,6 +4,7 @@ import os
 from typing import Optional
 from dotenv import load_dotenv
 from pathlib import Path
+from bson.objectid import ObjectId
 
 env_path = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(dotenv_path=env_path)
@@ -63,32 +64,45 @@ class MongoDBConnection:
         finally:
             if close_after:
                 self.close()
-
+    
     def find_documents(self, db_name: str, collection_name: str, query: dict = None, projection: dict = None, limit: int = 0, close_after: bool = False):
-        """
-        Find documents in a collection.
-        Returns a list of documents (may be empty) or None on connection failure.
-        """
         if query is None:
             query = {}
+
+        # Intentar convertir _id si viene como string (caso común)
+        if "_id" in query and isinstance(query["_id"], str):
+            try:
+                query["_id"] = ObjectId(query["_id"])
+            except Exception:
+                # no convertir si no es un ObjectId válido
+                pass
+
         if not self.client:
             if not self.connect():
                 return None
+
         try:
+            print(f"[DEBUG] find_documents -> db: {db_name}, collection: {collection_name}, query: {query}, projection: {projection}, limit: {limit}")
             db = self.get_database(db_name)
             if db is None:
                 print("No database available.")
                 return []
+            # Verificar cantidad antes de convertir a lista (útil para debug)
+            count = db[collection_name].count_documents(query)
+            print(f"[DEBUG] documents matching: {count}")
             cursor = db[collection_name].find(query, projection)
             if limit and isinstance(limit, int) and limit > 0:
                 cursor = cursor.limit(limit)
-            return list(cursor)
+            results = list(cursor)
+            print(f"[DEBUG] returning {len(results)} documents")
+            return results
         except PyMongoError as e:
             print(f"Error finding documents: {e}")
             return []
         finally:
             if close_after:
                 self.close()
+        
 
     def get_menu_by_id(self, menu_id: str, db_name: str = "chatbot_ia", collection_name: str = "Menus", close_after: bool = False) -> dict:
         """

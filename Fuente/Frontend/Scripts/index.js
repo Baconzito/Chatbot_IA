@@ -109,13 +109,24 @@ function getCookie(name) {
     if (match) return match[2];
 }
 
-const getToken = () =>{
+function getToken() {
     const token = getCookie('auth_token');
-    if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log("Datos del usuario:", payload);
-        document.querySelector(".call-menu").textContent = payload.email;
+    if (!token) return null;
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) throw new Error('Invalid token structure');
+        // base64url -> base64
+        let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
+        const payloadJson = atob(base64);
+        const payload = JSON.parse(payloadJson);
+        const el = document.querySelector(".call-menu");
+        if (el && payload.email) el.textContent = payload.email;
         return token;
+    } catch (err) {
+        console.warn('auth_token inválido, limpiando cookie:', err);
+        document.cookie = 'auth_token=; path=/; Max-Age=0; SameSite=Strict';
+        return null;
     }
 }
 
@@ -123,26 +134,52 @@ getToken();
 
 // Add this after the API_BASE_URL import
 const chat_mensaje = document.querySelector(".chat-mensaje");
-async function getMenuById(menuId = '1'){
+
+const llamarChat = async () => {
     try {
         const tk = getToken();
-        const chatdata = await fetch(`${API_BASE_URL}/chat/create_chat`, {
+        const response = await fetch(`${API_BASE_URL}/chat/create_chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ token: tk })
-
         });
 
-        const chatId = (await chatdata.json()).id_chat; /*FALTA GUARDAR EN COOKIES*/
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data); // Debug log
+
+        if (!data || !data.chat_id) {
+            throw new Error('No chat_id in response');
+        }
+
+        // Set cookie with the chat_id
+        document.cookie = `chat_id=${data.chat_id}; path=/; SameSite=Strict`;
+        console.log('Cookie set:', getCookie('chat_id')); // Debug log
+        
+        return data.chat_id;
+    } catch (error) {
+        console.error('Error in llamarChat:', error);
+        return null;
+    }
+}
+
+
+
+async function getMenuById(menuId = '1'){
+    try {
+        const idChat = getCookie('chat_id');
         
         const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id_menu: menuId, id_chat: chatId})
+            body: JSON.stringify({ id_menu: menuId, id_chat: idChat}),
         });
 
         if (!response.ok) {
@@ -150,24 +187,17 @@ async function getMenuById(menuId = '1'){
         }
 
         const menu = await response.json();
-        
-        // Detailed console logging
-        console.group('Menu Data Retrieved:');
-        console.log('Complete menu object:', menu);
-        console.log('Menu structure:', JSON.stringify(menu, null, 2));
         let documentFragment = document.createDocumentFragment();
         
         let menuElement = document.createElement("div");
         menuElement.classList.add("menuElement");
 
-        // Mostrar el mensaje principal
         let mensajeTitulo = document.createElement("p");
         mensajeTitulo.textContent = menu.Mensaje;
         menuElement.appendChild(mensajeTitulo);
         let separador = document.createElement("HR");
         menuElement.appendChild(separador);
 
-        // Mostrar las opciones
         if (Array.isArray(menu.Opciones)) {
         menu.Opciones.forEach(opcion => {
             let divOpcion = document.createElement("div");
@@ -175,7 +205,6 @@ async function getMenuById(menuId = '1'){
             divOpcion.textContent = opcion.Titulo;
             divOpcion.dataset.idMenu = opcion.id_menu;
 
-            // (Opcional) agregar listener para usar el ID luego
             divOpcion.addEventListener("click", () => {
                 const opcionesDOM = menuElement.querySelectorAll(".menu-option");
                 opcionesDOM.forEach( op =>{
@@ -187,7 +216,6 @@ async function getMenuById(menuId = '1'){
                 getMenuById(divOpcion.dataset.idMenu);
             });
             documentFragment.appendChild(divOpcion);
-            // documentFragment.appendChild(MensajeEnvio(divOpcion.textContent));
         });
         } 
         else {
@@ -197,10 +225,6 @@ async function getMenuById(menuId = '1'){
     
         chat_mensaje.appendChild(menuElement);
 
-        if (menu.items) {
-            console.log('Menu items:', menu.items);
-        }
-        console.groupEnd();
         
         return menu;
     } catch (error) {
@@ -211,24 +235,12 @@ async function getMenuById(menuId = '1'){
 
 
 
-
-
-
-// Test in DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
-    // ...existing DOMContentLoaded code...
 
-    console.log('Fetching menu data...');
     try {
+        llamarChat();
         const menu = await getMenuById();
-        if (menu) {
-            console.log('------- Menu Data -------');
-            console.log('Raw menu data:', menu);
-            console.table(menu); // Shows data in table format if possible
-            console.log('------------------------');
-        } else {
-            console.warn('No menu data received');
-        }
+        
     } catch (error) {
         console.error('Error loading menu:', error);
     }

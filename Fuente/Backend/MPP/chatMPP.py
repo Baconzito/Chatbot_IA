@@ -2,6 +2,7 @@ from dataclasses import dataclass, asdict
 from Services.Extern.Conection import MongoDBConnection
 from typing import Optional, List, Dict, Any
 from datetime import datetime
+from bson import ObjectId  # Add this import at the top
 
 
 class ChatMPP:
@@ -74,18 +75,20 @@ class ChatMPP:
             if db is None:
                 return False
 
-            query = {
-                "$or": [
-                    {"_id": chat_id}
-                ]
-            }
+            # Convert string to ObjectId
+            try:
+                object_id = ObjectId(chat_id)
+            except Exception as e:
+                print(f"Error converting to ObjectId: {e}")
+                return False
 
             result = db["Chats"].update_one(
-                query,
+                {"_id": object_id},  # Now using ObjectId
                 {"$set": {"activo": False}}
             )
-            if result.matched_count > 0:
-                return self.get_menu_by_id(chat_id, id_menu="75")
+
+            if result.matched_count > 0 or result.modified_count > 0:
+                return self.get_menu_by_id(chat_id, "75")
             return None
         except Exception as e:
             print(f"Error closing chat: {e}")
