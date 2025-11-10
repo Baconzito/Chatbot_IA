@@ -48,23 +48,37 @@ class Mpp_User:
     def update_user_password(self, usr):
         """Actualiza la password de un usuario existente."""
         try:
+            self.connection.connect()
             db = self.connection.get_database(self.db_name)
-            if not db:
+            # comparar explícitamente con None (Database no soporta truthiness)
+            if db is None:
+                print("No se pudo obtener la DB:", self.db_name)
                 return False
-                
+
+            # soportar tanto usr.email / usr.password como usr.Email / usr.Password
+            email = getattr(usr, "Email", None)
+            password = getattr(usr, "Password", None)
+
+            if not email or not password:
+                print("Datos incompletos para update_user_password:", email, password)
+                return False
+
             result = db[self.collection].update_one(
-                {"email": usr.email},
+                {"email": email},
                 {"$set": {
-                    "password": usr.password
+                    "password": password
                 }}
             )
-            return result.modified_count > 0
+            if(result.matched_count > 0 or result.modified_count > 0):
+                return True
+            else:
+                return False  
         except Exception as e:
             print(f"Error updating user: {e}")
             return False
         finally:
             self.connection.close()
-
+            
     def login(self, usr):
         """
         Autentica a un usuario buscando primero por email y luego validando contraseña.

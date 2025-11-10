@@ -35,21 +35,27 @@ window.onload = function() {
 };
 
 const changePassword = async (pass) => {
-    if(pass.value != "" && pass.value.length >= 8){
-            const resGet = fetch(`${API_BASE_URL}/users/change_password`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: mail.textContent,
-                    password: pass 
-                })
-            });
-            pass.value = "";
-            showAlert("Contraseña cambiada con éxito.");
-        } else {
-            alert("La contraseña debe tener al menos 8 caracteres.");
+    try{
+        if(pass.value != "" && pass.value.length >= 8){
+                const resGet = fetch(`${API_BASE_URL}/users/change_password`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: mail.textContent,
+                        password: pass 
+                    })
+                });
+                pass.value = "";
+                showAlert("Contraseña cambiada con éxito.");
+            } else {
+                alert("La contraseña debe tener al menos 8 caracteres.");
+        }
+    }
+    catch(err){
+        console.error("Error al cambiar la contraseña:", err);
+        showAlert("No se pudo conectar con el servidor.");
     }
 }
 
@@ -157,4 +163,4 @@ async function cargarPerfil() {
     }
 }
 
-cargarPerfil();
+// cargarPerfil();

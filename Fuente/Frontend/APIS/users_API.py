@@ -19,12 +19,15 @@ def register():
 #Actualizacion contraseña
 @users_bp.route("/change_password", methods=["PUT"])
 def update_user_password():
-    data = request.json # json contiene email:<email>, password:<new_password>
-    if(user_BLL.update_user_password(data)):
-        return jsonify({'message': "Contraseña actualizada"}), 200
-    else:
-        return jsonify({'message': "Error al actualizar la contraseña"}), 400
-
+    try:
+        data = request.json # json contiene email:<email>, password:<new_password>
+        if(user_BLL.update_user_password(data)):
+            return jsonify({'message': "Contraseña actualizada"}), 200
+        else:
+            return jsonify({'message': "Error al actualizar la contraseña"}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500    
+        
 @users_bp.route("/logout", methods=["POST"])
 def logout():
     if(user_BLL.logout(request.json)): # json contiene token:<sesion_token>
