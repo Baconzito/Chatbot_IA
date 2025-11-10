@@ -5,7 +5,7 @@ chat_bp = Blueprint('chat_API', __name__, url_prefix='/chat')
 
 chat_BLL = ChatBLL()
 
-@chat_bp.route("/get_menu", methods=["GET"])
+@chat_bp.route("/get_menu", methods=["POST"])
 def get_menu():
     try:
         menu = chat_BLL.get_menu(request.json) # recibe id_menu e id_chat

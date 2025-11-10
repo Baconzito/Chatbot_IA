@@ -22,7 +22,7 @@ class ChatMPP:
             print(f"Error retrieving menu from database: {e}")
             return None
 
-    def create_chat(self, id_usuario: str, id_menu: str):
+    def create_chat(self, id_usuario: str):
         try:
             iniciado = datetime.utcnow().isoformat()
             doc = {
@@ -65,12 +65,6 @@ class ChatMPP:
             return None
 
     def close_chat(self, chat_id: str):
-        """
-        Marca el chat como cerrado (estado = False).
-        Se asume que el identificador del chat es un string (no ObjectId).
-        Busca por varias posibles claves (_id,) y devuelve
-        True si se encontró el documento (aunque ya estuviera cerrado), False en caso contrario.
-        """
         try:
             # Asegurar conexión
             if not getattr(self.db_conection, "client", None):
