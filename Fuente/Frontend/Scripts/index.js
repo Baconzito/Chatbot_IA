@@ -150,7 +150,6 @@ const llamarChat = async () => {
         }
 
         const data = await response.json();
-        console.log('Response data:', data); // Debug log
 
         if (!data || !data.chat_id) {
             throw new Error('No chat_id in response');
@@ -158,7 +157,6 @@ const llamarChat = async () => {
 
         // Set cookie with the chat_id
         document.cookie = `chat_id=${data.chat_id}; path=/; SameSite=Strict`;
-        console.log('Cookie set:', getCookie('chat_id')); // Debug log
         
         return data.chat_id;
     } catch (error) {
