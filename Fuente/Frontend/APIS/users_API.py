@@ -19,7 +19,7 @@ def register():
 @users_bp.route("/change_password", methods=["PUT"])
 def update_user_password():
     data = request.json # json contiene email:<email>, password:<new_password>
-    if(user_BLL.update_password(data)):
+    if(user_BLL.update_user_password(data)):
         return jsonify({'message': "Contraseña actualizada"}), 200
     else:
         return jsonify({'message': "Error al actualizar la contraseña"}), 400
