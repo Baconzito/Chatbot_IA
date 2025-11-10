@@ -134,8 +134,9 @@ async function getMenuById(menuId = '1'){
             body: JSON.stringify({ token: tk })
 
         });
-        const chatId = (await chatdata.json()).chat_id;/*FALTA GUARDAR EN COOKIES*/
 
+        const chatId = (await chatdata.json()).id_chat; /*FALTA GUARDAR EN COOKIES*/
+        
         const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
             method: 'POST',
             headers: {
