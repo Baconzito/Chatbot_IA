@@ -43,27 +43,27 @@ class MongoDBConnection:
             self.client = None
             print("MongoDB connection closed.")
 
-    # def insert_document(self, db_name: str, collection_name: str, document: dict, close_after: bool = False):
-    #     """
-    #     Insert a single document into the specified collection.
-    #     Returns inserted_id on success, or None on failure.
-    #     """
-    #     if not self.client:
-    #         if not self.connect():
-    #             return None
-    #     try:
-    #         db = self.get_database(db_name)
-    #         if db is None:
-    #             print("No database available.")
-    #             return None
-    #         result = db[collection_name].insert_one(document)
-    #         return result.inserted_id
-    #     except PyMongoError as e:
-    #         print(f"Error inserting document: {e}")
-    #         return None
-    #     finally:
-    #         if close_after:
-    #             self.close()
+    def insert_document(self, db_name: str, collection_name: str, document: dict, close_after: bool = False):
+        """
+        Insert a single document into the specified collection.
+        Returns inserted_id on success, or None on failure.
+        """
+        if not self.client:
+            if not self.connect():
+                return None
+        try:
+            db = self.get_database(db_name)
+            if db is None:
+                print("No database available.")
+                return None
+            result = db[collection_name].insert_one(document)
+            return result.inserted_id
+        except PyMongoError as e:
+            print(f"Error inserting document: {e}")
+            return None
+        finally:
+            if close_after:
+                self.close()
     
     def find_documents(self, db_name: str, collection_name: str, query: dict = None, projection: dict = None, limit: int = 0, close_after: bool = False):
         if query is None:
