@@ -136,7 +136,7 @@ async function getMenuById(menuId = '1'){
         });
 
         const chatId = (await chatdata.json()).id_chat; /*FALTA GUARDAR EN COOKIES*/
-
+        
         const response = await fetch(`${API_BASE_URL}/chat/get_menu`, {
             method: 'GET',
             headers: {
