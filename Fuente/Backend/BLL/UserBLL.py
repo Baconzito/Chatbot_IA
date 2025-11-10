@@ -100,11 +100,15 @@ class UserBLL:
 
     def update_user_password(self, user_data):
         # Logic to update a user
-        email = user_data.get('email')
-        password = user_data.get('password')
-        oUsuario = UserBE(email, HP(password))
-        return self.users_MPP.update_user_password(oUsuario)
-
+        try:
+            email = user_data.get('email')
+            password = user_data.get('password')
+            oUsuario = UserBE(email, HP(password))
+            return self.users_MPP.update_user_password(oUsuario)
+        except Exception as e:
+            print(f"Error in update_user_password BLL: {e}")
+            return False
+        
     def login(self, user_data):
         email = user_data.get('email')
         password = user_data.get('password')
